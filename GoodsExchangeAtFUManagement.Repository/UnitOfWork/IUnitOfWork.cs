@@ -1,4 +1,5 @@
-﻿using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
+﻿using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace GoodsExchangeAtFUManagement.Repository.UnitOfWork
 {
     public interface IUnitOfWork
     {
-        public Task<int> SaveChangeAsync();
-        public IUserRepository UserRepository { get; }
+        Task<int> SaveChangeAsync();
+        IUserRepository UserRepository { get; }
+        IOTPCodeRepository OTPCodeRepository { get; }
     }
 }

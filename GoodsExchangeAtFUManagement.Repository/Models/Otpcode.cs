@@ -11,6 +11,8 @@ public partial class Otpcode
 
     public DateTime CreatedAt { get; set; }
 
+    public bool IsUsed { get; set; }
+
     public string CreatedBy { get; set; } = null!;
 
     public virtual User CreatedByNavigation { get; set; } = null!;

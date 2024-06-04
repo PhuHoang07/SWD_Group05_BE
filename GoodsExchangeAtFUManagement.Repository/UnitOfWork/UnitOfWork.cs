@@ -1,4 +1,5 @@
 ﻿using GoodsExchangeAtFUManagement.Repository.Models;
+using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace GoodsExchangeAtFUManagement.Repository.UnitOfWork
     {
         private readonly GoodsExchangeAtFuContext _context;
         private readonly IUserRepository _userRepository;
-        
-        public UnitOfWork(GoodsExchangeAtFuContext context, IUserRepository userRepository)
+        private readonly IOTPCodeRepository _otpCodeRepository;
+
+        public UnitOfWork(GoodsExchangeAtFuContext context, IUserRepository userRepository, IOTPCodeRepository otpCodeRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _otpCodeRepository = otpCodeRepository;
         }
 
         public async Task<int> SaveChangeAsync()
@@ -25,5 +28,6 @@ namespace GoodsExchangeAtFUManagement.Repository.UnitOfWork
         }
 
         public IUserRepository UserRepository => _userRepository;
+        public IOTPCodeRepository OTPCodeRepository => _otpCodeRepository;
     }
 }
