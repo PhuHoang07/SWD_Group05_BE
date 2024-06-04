@@ -1,0 +1,6 @@
+@GoodsExchangeAtFUManagement_HostAddress = http://localhost:5019
+
+GET {{GoodsExchangeAtFUManagement_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
