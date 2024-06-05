@@ -9,6 +9,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 {
     public interface IUserService
     {
+        Task Register(UserRegisterRequestTestingModel request);
         Task RegisterAccount(UserRegisterRequestModel request);
         Task<UserLoginResponseModel> Login(UserLoginRequestModel request);
     }

@@ -1,9 +1,11 @@
 using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
 using GoodsExchangeAtFUManagement.Repository.Models;
+using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
+using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -37,16 +39,16 @@ builder.Services.AddSingleton<GlobalExceptionMiddleware>();
 //============================================REPO================================================
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
-
+builder.Services.AddTransient<IOTPCodeRepository, OTPCodeRepository>();
 
 //===========================================SERVICE==============================================
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOTPService, OTPService>();
 
-
-//================================================CORS============================================
+//===========================================CORS=================================================
 
 builder.Services.AddCors(options =>
 {
@@ -116,7 +118,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<GlobalExceptionMiddleware>();
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

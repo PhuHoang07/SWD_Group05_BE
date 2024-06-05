@@ -69,9 +69,10 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
 
         public virtual async Task<TEntity> GetSingle(
             Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "")  
         {
-            var query = GetQueryable(filter, null, includeProperties, null, null);
+            var query = GetQueryable(filter, orderBy, includeProperties, null, null);
             return await query.SingleOrDefaultAsync();
         }
 
