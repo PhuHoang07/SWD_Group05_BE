@@ -73,7 +73,9 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
             string includeProperties = "")  
         {
             var query = GetQueryable(filter, orderBy, includeProperties, null, null);
-            return await query.SingleOrDefaultAsync();
+            if (orderBy != null)
+                query = orderBy(query);
+            return await query.FirstOrDefaultAsync();
         }
 
         public virtual async Task<TEntity> GetByID(int id)
