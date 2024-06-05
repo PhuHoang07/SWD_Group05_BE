@@ -20,38 +20,24 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(UserRegisterRequestModel request)
         {
-            try
-            {
-                await _userService.RegisterAccount(request);
-                return Ok("Register successfully!");
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            await _userService.RegisterAccount(request);
+            return Ok("Register successfully!");
+        }
+        
+        [HttpPost]
+        [Route("register-test")]
+        public async Task<IActionResult> RegisterForTest(UserRegisterRequestTestingModel request)
+        {
+            await _userService.Register(request);
+            return Ok("Register successfully!");
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(UserLoginRequestModel request)
         {
-            try
-            {
-                var user = await _userService.Login(request);
-                return Ok(user);
-            }
-            catch (CustomException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var user = await _userService.Login(request);
+            return Ok(user);
         }
     }
 }

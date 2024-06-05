@@ -15,6 +15,7 @@ namespace GoodsExchangeAtFUManagement.Service.Ultis
         private static string Key = "b5aec850e7e188935e6832264e527945aef42149aa8567b64028f6b42decb66a";
         private static string Issuser = "JWTIssuerSigningIssuerGEFUSWDG5";
         private static string Audience = "JWTIssuerSigningAudienceGEFUSWDG5";
+
         public static string GenerateJWT(User User)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key));
