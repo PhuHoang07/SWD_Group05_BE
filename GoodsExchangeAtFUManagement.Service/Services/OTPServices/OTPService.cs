@@ -1,4 +1,5 @@
-﻿using GoodsExchangeAtFUManagement.Repository.Models;
+﻿using GoodsExchangeAtFUManagement.Repository.DTOs.OTPDTOs;
+using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
@@ -27,9 +28,9 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
             return new Random().Next(0, 999999).ToString("D6");
         }
 
-        public async Task<string> CreateOTPCodeForEmail(string email)
+        public async Task<string> CreateOTPCodeForEmail(OTPSendEmailRequestModel model)
         {
-            User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(email));
+            User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(model.Email));
 
             if (currentUser == null)
             {
@@ -42,13 +43,13 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
             {
                 if ((DateTime.Now - latestOTP.CreatedAt).TotalMinutes < 2)
                 {
-                    throw new CustomException($"Cannot send new OTP right now, please wait for {120 - (DateTime.Now - latestOTP.CreatedAt).TotalSeconds} second(s)");
+                    throw new CustomException($"Cannot send new OTP right now, please wait for {Math.Abs(120 - (DateTime.Now - latestOTP.CreatedAt).TotalSeconds)} second(s)");
                 }
             }
 
             string newOTP = CreateNewOTPCode();
-            var htmlBody = $"<h1>Your OTP code is:</h1><br/><p>OTP Code: {newOTP}<br/>It will be expired in 30 minutes</p>";
-            bool sendEmailSuccess = await _emailService.SendEmail(email, "Login Information", htmlBody);
+            var htmlBody = $"<h1>Your OTP code is:</h1><br/><p>{newOTP}<br/>It will be expired in 30 minutes</p>";
+            bool sendEmailSuccess = await _emailService.SendEmail(model.Email, model.Subject, htmlBody);
             if (!sendEmailSuccess)
             {
                 throw new CustomException("Error in sending email");

@@ -48,7 +48,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 
-//================================================CORS============================================
+//===========================================CORS=================================================
 
 builder.Services.AddCors(options =>
 {
@@ -118,7 +118,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<GlobalExceptionMiddleware>();
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

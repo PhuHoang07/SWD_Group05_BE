@@ -28,6 +28,51 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             _emailService = emailService;
         }
 
+        public async Task Register(UserRegisterRequestTestingModel request)
+        {
+            User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email));
+            if (currentUser != null)
+            {
+                throw new CustomException("User email existed!");
+            }
+
+            if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
+            {
+                throw new CustomException("Email is not in correct format. Please input @fpt email!");
+            }
+
+            if (request.Role.IsNullOrEmpty())
+            {
+                throw new CustomException("Please enter role");
+            }
+
+            if (!Enum.IsDefined(typeof(RoleEnums), request.Role))
+            {
+                throw new CustomException("Please enter role in correct format");
+            }
+
+            if (!Regex.Match(request.PhoneNumber, @"^\d{10,11}$").Success)
+            {
+                throw new CustomException("Phone number is not in correct format!");
+            }
+
+            User newUser = _mapper.Map<User>(request);
+            newUser.Id = Guid.NewGuid().ToString();
+            var (salt, hash) = PasswordHasher.HashPassword(request.Password);
+            newUser.Password = hash;
+            newUser.Salt = salt;
+            newUser.Status = AccountStatusEnums.Active.ToString();
+            newUser.Balance = 0;
+
+            await _unitOfWork.UserRepository.Insert(newUser);
+            var result = await _unitOfWork.SaveChangeAsync();
+
+            if (result < 1)
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
         public async Task RegisterAccount(UserRegisterRequestModel request)
         {
             User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email));

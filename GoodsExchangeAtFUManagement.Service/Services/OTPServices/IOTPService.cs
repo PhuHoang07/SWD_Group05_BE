@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoodsExchangeAtFUManagement.Repository.DTOs.OTPDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
 {
     public interface IOTPService
     {
-        Task<string> CreateOTPCodeForEmail(string email);
+        Task<string> CreateOTPCodeForEmail(OTPSendEmailRequestModel model);
     }
 }
