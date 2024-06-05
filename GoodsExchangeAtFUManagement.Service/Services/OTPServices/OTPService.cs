@@ -43,7 +43,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
             {
                 if ((DateTime.Now - latestOTP.CreatedAt).TotalMinutes < 2)
                 {
-                    throw new CustomException($"Cannot send new OTP right now, please wait for {Math.Abs(120 - (DateTime.Now - latestOTP.CreatedAt).TotalSeconds)} second(s)");
+                    throw new CustomException($"Cannot send new OTP right now, please wait for {(120 - (DateTime.Now - latestOTP.CreatedAt).TotalSeconds).ToString("0.00")} second(s)");
                 }
             }
 
