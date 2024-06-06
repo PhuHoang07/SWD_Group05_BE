@@ -7,12 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BusinessObjects\BusinessObjects.csproj" />
-    <ProjectReference Include="..\GoodsExchangeAtFUManagement.DAO\GoodsExchangeAtFUManagement.DAO.csproj" />
   </ItemGroup>
 
 </Project>

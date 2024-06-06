@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoodsExchangeAtFUManagement.Repository.Models;
+namespace BusinessObjects.Models;
 
 public partial class Chat
 {
