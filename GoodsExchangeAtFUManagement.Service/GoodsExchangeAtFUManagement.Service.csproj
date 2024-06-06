@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="MimeKit" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusinessObjects\BusinessObjects.csproj" />
     <ProjectReference Include="..\GoodsExchangeAtFUManagement.Repository\GoodsExchangeAtFUManagement.Repository.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
+using GoodsExchangeAtFUManagement.DAO;
 using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
-using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
@@ -68,8 +68,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidIssuer = "JWTIssuerSigningIssuerGEFUSWDG5",
-            ValidAudience = "JWTIssuerSigningAudienceGEFUSWDG5",
+            ValidIssuer = "FPTUStudents",
+            ValidAudience = "FPTUStudents",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("b5aec850e7e188935e6832264e527945aef42149aa8567b64028f6b42decb66a")),
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -85,7 +85,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,

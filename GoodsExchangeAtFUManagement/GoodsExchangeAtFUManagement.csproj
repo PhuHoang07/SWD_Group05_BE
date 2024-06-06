@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusinessObjects\BusinessObjects.csproj" />
+    <ProjectReference Include="..\GoodsExchangeAtFUManagement.DAO\GoodsExchangeAtFUManagement.DAO.csproj" />
     <ProjectReference Include="..\GoodsExchangeAtFUManagement.Service\GoodsExchangeAtFUManagement.Service.csproj" />
   </ItemGroup>
 
