@@ -1,8 +1,14 @@
-﻿using BusinessObjects.Models;
-using GoodsExchangeAtFUManagement.Repository.DTOs.OTPDTOs;
+﻿using GoodsExchangeAtFUManagement.Repository.DTOs.OTPDTOs;
+using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
 {
@@ -22,7 +28,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
             return new Random().Next(0, 999999).ToString("D6");
         }
 
-        public async Task CreateOTPCodeForEmail(OTPSendEmailRequestModel model)
+        public async Task<string> CreateOTPCodeForEmail(OTPSendEmailRequestModel model)
         {
             User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(model.Email));
 
@@ -42,7 +48,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
             }
 
             string newOTP = CreateNewOTPCode();
-            var htmlBody = HTMLEmail.SendingOTPEmail(currentUser.Fullname, newOTP, model.Subject.ToLower());
+            var htmlBody = $"<h1>Your OTP code is:</h1><br/><p>{newOTP}<br/>It will be expired in 30 minutes</p>";
             bool sendEmailSuccess = await _emailService.SendEmail(model.Email, model.Subject, htmlBody);
             if (!sendEmailSuccess)
             {
@@ -59,47 +65,12 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
 
             await _unitOfWork.OTPCodeRepository.Insert(newOTPCode);
             var result = await _unitOfWork.SaveChangeAsync();
+
             if (result < 1)
             {
                 throw new CustomException("Internal Server Error");
             }
-        }
-
-        public async Task VerifyOTP(OTPVerifyRequestModel model)
-        {
-            User currentUser = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(model.Email));
-
-            if (currentUser == null)
-            {
-                throw new CustomException("There is no account with this email");
-            }
-
-            var latestOTP = await _unitOfWork.OTPCodeRepository.GetSingle(o => o.CreatedBy == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
-
-            if (latestOTP != null)
-            {
-                if ((DateTime.Now - latestOTP.CreatedAt).TotalMinutes > 30 || latestOTP.IsUsed)
-                {
-                    throw new CustomException("The OTP is already used or expired");
-                }
-
-                if (latestOTP.Otp.Equals(model.OTP))
-                {
-                    latestOTP.IsUsed = true;
-                }
-                else
-                {
-                    throw new CustomException("The OTP is incorrect");
-                }
-
-                _unitOfWork.OTPCodeRepository.Update(latestOTP);
-                var result = await _unitOfWork.SaveChangeAsync();
-
-                if (result < 1)
-                {
-                    throw new CustomException("Internal Server Error");
-                }
-            }
+            return newOTP;
         }
     }
 }

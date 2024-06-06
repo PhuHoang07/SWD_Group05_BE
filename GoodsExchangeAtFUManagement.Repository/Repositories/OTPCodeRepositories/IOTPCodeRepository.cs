@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+﻿using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositories;
 using System;
 using System.Collections.Generic;

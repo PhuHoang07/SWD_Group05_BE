@@ -9,10 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodsExchangeAtFUManagement
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodsExchangeAtFUManagement.Service", "GoodsExchangeAtFUManagement.Service\GoodsExchangeAtFUManagement.Service.csproj", "{1FC3C38D-9F5D-41AC-B973-733F3250DF0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodsExchangeAtFUManagement.DAO", "GoodsExchangeAtFUManagement.DAO\GoodsExchangeAtFUManagement.DAO.csproj", "{F003737B-B06C-4E45-B4AF-24990D8685BB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{1C4F73A6-508B-41C7-A80B-52726B254A20}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,14 +27,6 @@ Global
 		{1FC3C38D-9F5D-41AC-B973-733F3250DF0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FC3C38D-9F5D-41AC-B973-733F3250DF0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FC3C38D-9F5D-41AC-B973-733F3250DF0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F003737B-B06C-4E45-B4AF-24990D8685BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F003737B-B06C-4E45-B4AF-24990D8685BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F003737B-B06C-4E45-B4AF-24990D8685BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F003737B-B06C-4E45-B4AF-24990D8685BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C4F73A6-508B-41C7-A80B-52726B254A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C4F73A6-508B-41C7-A80B-52726B254A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C4F73A6-508B-41C7-A80B-52726B254A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C4F73A6-508B-41C7-A80B-52726B254A20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿using GoodsExchangeAtFUManagement.DAO;
+﻿using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using System;

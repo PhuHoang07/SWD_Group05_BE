@@ -2,7 +2,6 @@
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodsExchangeAtFUManagement.Controllers
@@ -22,15 +21,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("send")]
         public async Task<IActionResult> SendOTP(OTPSendEmailRequestModel model)
         {
-            await _otpService.CreateOTPCodeForEmail(model);
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("verify")]
-        public async Task<IActionResult> VerifyOTP(OTPVerifyRequestModel model)
-        {
-            await _otpService.VerifyOTP(model);
+            var otp = await _otpService.CreateOTPCodeForEmail(model);
             return Ok();
         }
     }

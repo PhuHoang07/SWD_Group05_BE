@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BusinessObjects.Models;
+namespace GoodsExchangeAtFUManagement.Repository.Models;
 
 public partial class PostMode
 {

@@ -12,7 +12,5 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         Task Register(UserRegisterRequestTestingModel request);
         Task RegisterAccount(UserRegisterRequestModel request);
         Task<UserLoginResponseModel> Login(UserLoginRequestModel request);
-        Task ResetPassword(UserResetPasswordRequestModel request);
-        Task ChangePassword(UserChangePasswordRequestModel model, string token);
     }
 }

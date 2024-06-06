@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoodsExchangeAtFUManagement.DAO;
+namespace GoodsExchangeAtFUManagement.Repository.Models;
 
 public partial class GoodsExchangeAtFuContext : DbContext
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BusinessObjects.Models;
+namespace GoodsExchangeAtFUManagement.DAO.Models;
 
 public partial class Report
 {

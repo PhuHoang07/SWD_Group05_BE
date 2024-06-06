@@ -9,7 +9,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
 {
     public interface IOTPService
     {
-        Task CreateOTPCodeForEmail(OTPSendEmailRequestModel model);
-        Task VerifyOTP(OTPVerifyRequestModel model);
+        Task<string> CreateOTPCodeForEmail(OTPSendEmailRequestModel model);
     }
 }
