@@ -1,4 +1,4 @@
-﻿using GoodsExchangeAtFUManagement.Repository.Models;
+﻿using BusinessObjects.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,8 @@ namespace GoodsExchangeAtFUManagement.Service.Ultis
     public static class JwtGenerator
     {
         private static string Key = "b5aec850e7e188935e6832264e527945aef42149aa8567b64028f6b42decb66a";
-        private static string Issuser = "JWTIssuerSigningIssuerGEFUSWDG5";
-        private static string Audience = "JWTIssuerSigningAudienceGEFUSWDG5";
+        private static string Issuser = "FPTUStudents";
+        private static string Audience = "FPTUStudents";
 
         public static string GenerateJWT(User User)
         {
@@ -44,5 +44,6 @@ namespace GoodsExchangeAtFUManagement.Service.Ultis
             Claim? claim = _tokenHandler.ReadJwtToken(jwtToken).Claims.FirstOrDefault(selector => selector.Type.ToString().Equals(nameClaim));
             return claim != null ? claim.Value : "Error!!!";
         }
+
     }
 }

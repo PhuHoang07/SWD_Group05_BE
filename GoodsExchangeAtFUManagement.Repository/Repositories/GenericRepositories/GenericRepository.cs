@@ -1,4 +1,4 @@
-﻿using GoodsExchangeAtFUManagement.Repository.Models;
+﻿using GoodsExchangeAtFUManagement.DAO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

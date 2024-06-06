@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using GoodsExchangeAtFUManagement.Repository.Enums;
-using GoodsExchangeAtFUManagement.Repository.Models;
 using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
@@ -12,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BusinessObjects.Models;
 
 namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 {
@@ -79,7 +79,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 
             if (currentUser != null)
             {
-                throw new CustomException("User email existed!");
+                throw new CustomException("Email is already used to create account!");
             }
 
             if (!request.Email.EndsWith("@fpt.edu.vn") && !request.Email.EndsWith("@fe.edu.vn"))
@@ -103,7 +103,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             newUser.Status = AccountStatusEnums.Active.ToString();
             newUser.Balance = 0;
             var firstPassword = PasswordHasher.GenerateRandomPassword();
-            var htmlBody = $"<h1>Your login information is:</h1><br/><p>Email: {request.Email}<br/>Password: {firstPassword}</p>";
+            var htmlBody = HTMLEmail.CreateAccountEmail(request.Fullname, request.Email, firstPassword);
             bool sendEmailSuccess = await _emailService.SendEmail(request.Email, "Login Information", htmlBody);
 
             if (!sendEmailSuccess)
@@ -130,7 +130,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 
             if (user == null)
             {
-                throw new CustomException("User email not exist!");
+                throw new CustomException("There is no account using this email!");
             }
 
             if (!PasswordHasher.VerifyPassword(request.Password, user.Salt, user.Password))
@@ -146,10 +146,66 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
                     Balance = user.Balance,
-                    Role = user.Role    
+                    Role = user.Role
                 },
                 token = JwtGenerator.GenerateJWT(user)
             };
+        }
+
+        public async Task ResetPassword(UserResetPasswordRequestModel request)
+        {
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Email.Equals(request.Email));
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
+
+            if (!request.NewPassword.Equals(request.ConfirmPassword))
+            {
+                throw new CustomException("Password and comfirm password must match");
+            }
+
+            var (salt, hash) = PasswordHasher.HashPassword(request.NewPassword);
+            user.Password = hash;
+            user.Salt = salt;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new CustomException("Internal Server Error");
+            }
+        }
+
+        public async Task ChangePassword(UserChangePasswordRequestModel model, string token)
+        {
+            var userId = JwtGenerator.DecodeToken(token, "userId");
+            var user = await _unitOfWork.UserRepository.GetSingle(u => u.Id.Equals(userId));
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
+
+            if (!PasswordHasher.VerifyPassword(model.OldPassword, user.Salt, user.Password))
+            {
+                throw new CustomException("Password incorrect!");
+            }
+
+            if (!model.NewPassword.Equals(model.ConfirmPassword))
+            {
+                throw new CustomException("Password and comfirm password must match");
+            }
+
+            var (salt, hash) = PasswordHasher.HashPassword(model.NewPassword);
+            user.Password = hash;
+            user.Salt = salt;
+
+            _unitOfWork.UserRepository.Update(user);
+            var result = await _unitOfWork.SaveChangeAsync();
+            if (result < 1)
+            {
+                throw new CustomException("Internal Server Error");
+            }
         }
     }
 }
