@@ -86,6 +86,7 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
         public virtual async Task Insert(TEntity entity)
         {
             await dbSet.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
         //public virtual async Task Delete(object id)
@@ -107,6 +108,7 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
+            context.SaveChangesAsync();
         }
 
         public virtual async Task<int> Count(Expression<Func<TEntity, bool>> filter = null)
@@ -119,7 +121,6 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
             }
             return await query.CountAsync();
         }
-
     }
 }
 
