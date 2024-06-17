@@ -11,8 +11,6 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositorie
 {
     public class OTPCodeRepository : GenericRepository<Otpcode>, IOTPCodeRepository
     {
-        public OTPCodeRepository(GoodsExchangeAtFuContext context) : base(context)
-        {
-        }
+        
     }
 }
