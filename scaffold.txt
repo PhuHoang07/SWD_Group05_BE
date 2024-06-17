@@ -1,0 +1,14 @@
+dotnet ef dbcontext scaffold "Server=(local);uid=sa;pwd=12345;database=GoodsExchangeAtFU;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --output-dir Models --force
+
+private string GetConnectionString()
+{
+    IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", true, true).Build();
+    return configuration["ConnectionStrings:DefaultConnectionString"];
+}
+
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    optionsBuilder.UseSqlServer(GetConnectionString());
+}
