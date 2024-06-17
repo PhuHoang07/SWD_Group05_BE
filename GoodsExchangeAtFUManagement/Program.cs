@@ -3,12 +3,10 @@ using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
-using GoodsExchangeAtFUManagement.Repository.UnitOfWork;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -22,33 +20,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//=======================================CONNECTION STRING========================================
-
-builder.Services.AddDbContext<GoodsExchangeAtFuContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
-//==========================================MAPPER================================================
+//========================================== MAPPER ===============================================
 
 builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
-//==========================================MIDDLEWARE============================================
+//========================================== MIDDLEWARE ===========================================
 
 builder.Services.AddSingleton<GlobalExceptionMiddleware>();
 
-//============================================REPO================================================
+//========================================== REPOSITORY ===========================================
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IOTPCodeRepository, OTPCodeRepository>();
 
-//===========================================SERVICE==============================================
+//=========================================== SERVICE =============================================
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
 
-//===========================================CORS=================================================
+//=========================================== CORS ================================================
 
 builder.Services.AddCors(options =>
 {
@@ -61,7 +52,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
-//===========================================AUTHENTICATION========================================
+//========================================== AUTHENTICATION =======================================
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Bearer", options =>
@@ -78,7 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-//===================================================SWAGGER=======================================
+//================================================ SWAGGER ========================================
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -92,8 +83,8 @@ builder.Services.AddSwaggerGen(options =>
         Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
-     {
-         {
+    {
+        {
             new OpenApiSecurityScheme
                 {
                     Reference = new OpenApiReference
@@ -103,8 +94,8 @@ builder.Services.AddSwaggerGen(options =>
                     }
                 },
             new string[] {}
-         }
-     });
+        }
+    });
 });
 
 //===================================================================================================
