@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using System;
@@ -14,6 +15,8 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
         public MapperProfile()
         {
             CreateMap<UserRegisterRequestModel, User>();
+            CreateMap<CampusRequestModel, Campus>();
+            CreateMap<Campus, CampusResponseModel>();
         }
     }
 }
