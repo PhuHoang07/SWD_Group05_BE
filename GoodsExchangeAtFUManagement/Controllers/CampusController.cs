@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.DTOs.CampusDTOs;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api/campus")]
     [ApiController]
+    [Authorize]
     public class CampusController : ControllerBase
     {
         private readonly ICampusService _campusService;
@@ -15,6 +17,18 @@ namespace GoodsExchangeAtFUManagement.Controllers
         {
             _campusService = campusService;
         }
+
+        private string GetTokenFromHeader()
+        {
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                throw new UnauthorizedAccessException("Authorization token is missing or invalid.");
+            }
+
+            return authHeader.Split(" ")[1];
+        }
+
 
         [HttpPost]
         [Route("create")]
@@ -26,8 +40,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
             }
 
             try
-            {
-                await _campusService.CreateCampus(request);
+            { 
+                string token = GetTokenFromHeader();
+                await _campusService.CreateCampus(request, token);
                 return Ok("Campus created successfully!");
             }
             catch (Exception ex)
@@ -40,8 +55,15 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("view-all")]
         public async Task<IActionResult> GetAllCampus()
         {
-            var campuses = await _campusService.GetAllCampus();
-            return Ok(campuses);
+            try
+            {
+                var campuses = await _campusService.GetAllCampus();
+                return Ok(campuses);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -50,6 +72,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         {
             try
             {
+                
                 var campus = await _campusService.GetCampusById(id);
                 if (campus == null)
                 {
@@ -67,8 +90,21 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("update")]
         public async Task<IActionResult> UpdateCampus([FromBody] CampusRequestModel request)
         {
-                await _campusService.UpdateCampus(request);
+            if (request == null)
+            {
+                return BadRequest("Invalid campus data.");
+            }
+
+            try
+            {
+                string token = GetTokenFromHeader();
+                await _campusService.UpdateCampus(request,token);
                 return Ok("Campus updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
@@ -77,7 +113,8 @@ namespace GoodsExchangeAtFUManagement.Controllers
         {
             try
             {
-                await _campusService.DeleteCampus(id);
+                string token = GetTokenFromHeader();
+                await _campusService.DeleteCampus(id, token);
                 return Ok("Campus deleted successfully!");
             }
             catch (Exception ex)
