@@ -2,6 +2,7 @@
 using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CampusRepositories;
+using GoodsExchangeAtFUManagement.Service.Ultis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,32 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             _campusRepository = campusRepository;
         }
 
+        private void EnsureAuthorization(string token, bool requireAdmin = false)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new UnauthorizedAccessException("Authorization required");
+            }
+
+            var userId = JwtGenerator.DecodeToken(token, "userId");
+            if (userId == null)
+            {
+                throw new UnauthorizedAccessException("Authorization required");
+            }
+
+            if (requireAdmin)
+            {
+                var role = JwtGenerator.DecodeToken(token, "role");
+                if (role != "admin")
+                {
+                    throw new UnauthorizedAccessException("Only admins can perform this action");
+                }
+            }
+        }
+
         public async Task CreateCampus(CampusRequestModel request, string token)
         {
-
+            EnsureAuthorization(token, true); 
             Campus currentCampus = await _campusRepository.GetSingle(c => c.Name.Equals(request.Name));
             if (currentCampus != null)
             {
@@ -35,6 +59,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
 
         public async Task DeleteCampus(string id, string token)
         {
+            EnsureAuthorization(token, true); 
             Campus deleteCampus = await _campusRepository.GetSingle(c => c.Id.Equals(id));
             if (deleteCampus == null)
             {
@@ -43,16 +68,16 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             await _campusRepository.Delete(deleteCampus.Id);
         }
 
-
         public async Task<List<CampusResponseModel>> GetAllCampus()
         {
+         
             var campuses = await _campusRepository.Get();
             var campusResponses = _mapper.Map<List<CampusResponseModel>>(campuses);
             return campusResponses;
         }
 
         public async Task<CampusResponseModel> GetCampusById(string id)
-        {
+        {         
             var campus = await _campusRepository.GetSingle(c => c.Id.Equals(id));
             if (campus == null)
             {
@@ -64,6 +89,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
 
         public async Task UpdateCampus(CampusRequestModel request, string token)
         {
+            EnsureAuthorization(token, true); 
             var campus = await _campusRepository.GetSingle(c => c.Id.Equals(request.Id));
             if (campus == null)
             {
