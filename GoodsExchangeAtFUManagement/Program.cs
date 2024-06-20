@@ -1,9 +1,11 @@
 using GoodsExchangeAtFUManagement.DAO;
 using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
+using GoodsExchangeAtFUManagement.Repository.Repositories.CampusRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
+using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
@@ -34,12 +36,14 @@ builder.Services.AddSingleton<GlobalExceptionMiddleware>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IOTPCodeRepository, OTPCodeRepository>();
 builder.Services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddTransient<ICampusRepository, CampusRepository>();
 
 //=========================================== SERVICE =============================================
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
+builder.Services.AddScoped<ICampusService, CampusService>();
 
 //=========================================== CORS ================================================
 
