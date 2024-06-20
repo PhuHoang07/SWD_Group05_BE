@@ -1,21 +1,23 @@
 ﻿using BusinessObjects.DTOs.CampusDTOs;
+using BusinessObjects.DTOs.CategoryDTOs;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
+using GoodsExchangeAtFUManagement.Service.Services.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Controllers
 {
-    [Route("api/campus")]
+    [Route("api/category")]
     [ApiController]
     [Authorize]
-    public class CampusController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private readonly ICampusService _campusService;
+        private readonly ICategoryService _categoryService;
 
-        public CampusController(ICampusService campusService)
+        public CategoryController(ICategoryService categoryService)
         {
-            _campusService = campusService;
+           _categoryService = categoryService;
         }
 
         private string GetTokenFromHeader()
@@ -32,18 +34,18 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateCampus([FromBody] CampusCreateRequestModel request)
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateRequestModel request)
         {
             if (request == null)
             {
-                return BadRequest("Invalid campus data.");
+                return BadRequest("Invalid category data.");
             }
 
             try
-            { 
+            {
                 string token = GetTokenFromHeader();
-                await _campusService.CreateCampus(request, token);
-                return Ok("Campus created successfully!");
+                await _categoryService.CreateCategory(request, token);
+                return Ok("Category created successfully!");
             }
             catch (Exception ex)
             {
@@ -53,11 +55,11 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCampus()
+        public async Task<IActionResult> GetAllCategory()
         {
             try
             {
-                var campuses = await _campusService.GetAllCampus();
+                var campuses = await _categoryService.GetAllCategory();
                 return Ok(campuses);
             }
             catch (Exception ex)
@@ -68,15 +70,15 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view/{id}")]
-        public async Task<IActionResult> GetCampusById(string id)
+        public async Task<IActionResult> GetCategoryById(string id)
         {
             try
             {
-                
-                var campus = await _campusService.GetCampusById(id);
+
+                var campus = await _categoryService.GetCategoryById(id);
                 if (campus == null)
                 {
-                    return NotFound("Campus not found.");
+                    return NotFound("Category not found.");
                 }
                 return Ok(campus);
             }
@@ -88,18 +90,18 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> UpdateCampus([FromBody] CampusRequestModel request)
+        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestModel request)
         {
             if (request == null)
             {
-                return BadRequest("Invalid campus data.");
+                return BadRequest("Invalid category data.");
             }
 
             try
             {
                 string token = GetTokenFromHeader();
-                await _campusService.UpdateCampus(request,token);
-                return Ok("Campus updated successfully!");
+                await _categoryService.UpdateCategory(request, token);
+                return Ok("Category updated successfully!");
             }
             catch (Exception ex)
             {
@@ -109,13 +111,13 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public async Task<IActionResult> DeleteCampus(string id)
+        public async Task<IActionResult> DeleteCategory(string id)
         {
             try
             {
                 string token = GetTokenFromHeader();
-                await _campusService.DeleteCampus(id, token);
-                return Ok("Campus deleted successfully!");
+                await _categoryService.DeleteCategory(id, token);
+                return Ok("Category deleted successfully!");
             }
             catch (Exception ex)
             {

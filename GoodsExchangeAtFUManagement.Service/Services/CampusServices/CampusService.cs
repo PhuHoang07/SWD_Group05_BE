@@ -36,15 +36,15 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
 
             if (requireAdmin)
             {
-                var role = JwtGenerator.DecodeToken(token, "role");
-                if (role != "admin")
+                var role = JwtGenerator.DecodeToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+                if (role != "Admin")
                 {
                     throw new UnauthorizedAccessException("Only admins can perform this action");
                 }
             }
         }
 
-        public async Task CreateCampus(CampusRequestModel request, string token)
+        public async Task CreateCampus(CampusCreateRequestModel request, string token)
         {
             EnsureAuthorization(token, true); 
             Campus currentCampus = await _campusRepository.GetSingle(c => c.Name.Equals(request.Name));

@@ -12,7 +12,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
     {
         Task<List<CampusResponseModel>> GetAllCampus();
         Task<CampusResponseModel> GetCampusById(string id);
-        Task CreateCampus(CampusRequestModel  request, string token);
+        Task CreateCampus(CampusCreateRequestModel  request, string token);
         Task UpdateCampus(CampusRequestModel request, string token);
         Task DeleteCampus(string id, string token);
 

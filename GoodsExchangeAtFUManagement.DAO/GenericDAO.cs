@@ -105,6 +105,7 @@ namespace GoodsExchangeAtFUManagement.DAO
         {
             TEntity entityToDelete = await dbSet.FindAsync(id);
             Delete(entityToDelete);
+            await context.SaveChangesAsync();
         }
 
         private void Delete(TEntity entityToDelete)
