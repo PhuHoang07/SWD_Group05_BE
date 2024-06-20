@@ -5,6 +5,7 @@ using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 
 namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 {
@@ -13,12 +14,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IEmailService emailService)
+        public UserService(IUserRepository userRepository, IMapper mapper, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository)
         {
             _mapper = mapper;
             _emailService = emailService;
             _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task Register(UserRegisterRequestTestingModel request)
@@ -39,25 +42,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 
             await _userRepository.Insert(newUser);
 
-        }
-        
-        public async Task TestCreateNewUser(UserRegisterRequestTestingModel request)
-        {
-            User currentUser = await _userRepository.GetSingle(u => u.Email.Equals(request.Email));
-            if (currentUser != null)
-            {
-                throw new CustomException("User email existed!");
-            }
-
-            User newUser = _mapper.Map<User>(request);
-            newUser.Id = Guid.NewGuid().ToString();
-            var (salt, hash) = PasswordHasher.HashPassword(request.Password);
-            newUser.Password = hash;
-            newUser.Salt = salt;
-            newUser.Status = AccountStatusEnums.Active.ToString();
-            newUser.Balance = 0;
-
-            await _userRepository.Insert(newUser);
         }
 
         public async Task RegisterAccount(UserRegisterRequestModel request)
@@ -89,33 +73,29 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 
             await _userRepository.Insert(newUser);
         }
-        
-        public async Task CreateNewUser(UserRegisterRequestModel request)
-        {
-            User currentUser = await _userRepository.GetSingle(u => u.Email.Equals(request.Email));
-
-            if (currentUser != null)
-            {
-                throw new CustomException("Email is already used to create account!");
-            }
-
-            User newUser = _mapper.Map<User>(request);
-            newUser.Id = Guid.NewGuid().ToString();
-            newUser.Role = nameof(RoleEnums.User);
-            newUser.Status = AccountStatusEnums.Active.ToString();
-            newUser.Balance = 0;
-            var firstPassword = PasswordHasher.GenerateRandomPassword();
-            var (salt, hash) = PasswordHasher.HashPassword(firstPassword);
-            newUser.Password = hash;
-            newUser.Salt = salt;
-
-            await _userRepository.Insert(newUser);
-
-        }
 
         public async Task<UserLoginResponseModel> Login(UserLoginRequestModel request)
         {
             var user = await _userRepository.GetSingle(u => u.Email.Equals(request.Email));
+
+            var oldRefreshToken = await _refreshTokenRepository.GetSingle(r => r.UserId == user.Id && r.ExpiredDate > DateTime.Now);
+            string token;
+            if (oldRefreshToken == null)
+            {
+                token = JwtGenerator.GenerateRefreshToken();
+                var refreshToken = new RefreshToken
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Token = token,
+                    ExpiredDate = DateTime.Now.AddDays(7),
+                    UserId = user.Id,
+                };
+                await _refreshTokenRepository.Insert(refreshToken);
+            }
+            else
+            {
+                token = oldRefreshToken.Token;
+            }
 
             if (user == null)
             {
@@ -137,7 +117,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                     Balance = user.Balance,
                     Role = user.Role
                 },
-                token = JwtGenerator.GenerateJWT(user)
+                token = JwtGenerator.GenerateJWT(user),
+                refreshToken = token
             };
         }
 
@@ -158,7 +139,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             user.Password = hash;
             user.Salt = salt;
 
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
         }
 
         public async Task ChangePassword(UserChangePasswordRequestModel model, string token)
@@ -189,7 +170,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             user.Password = hash;
             user.Salt = salt;
 
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
         }
     }
 }

@@ -2,6 +2,7 @@ using GoodsExchangeAtFUManagement.DAO;
 using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
@@ -32,6 +33,7 @@ builder.Services.AddSingleton<GlobalExceptionMiddleware>();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IOTPCodeRepository, OTPCodeRepository>();
+builder.Services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
 
 //=========================================== SERVICE =============================================
 

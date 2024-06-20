@@ -45,5 +45,15 @@ namespace GoodsExchangeAtFUManagement.Service.Ultis
             return claim != null ? claim.Value : "Error!!!";
         }
 
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
     }
 }
