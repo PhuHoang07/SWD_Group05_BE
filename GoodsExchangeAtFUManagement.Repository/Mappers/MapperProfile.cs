@@ -15,6 +15,7 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
         public MapperProfile()
         {
             CreateMap<UserRegisterRequestModel, User>();
+            CreateMap<UserRegisterRequestTestingModel, User>();
             CreateMap<CampusRequestModel, Campus>();
             CreateMap<Campus, CampusResponseModel>();
         }
