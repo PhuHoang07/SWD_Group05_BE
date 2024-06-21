@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.DTOs.CampusDTOs
 {
-    public class CampusRequestModel
+    public class CampusCreateRequestModel
     {
-        [Required(ErrorMessage = "Please input campus id")]
-        public string Id { get; set; } = null!;
-
         [Required(ErrorMessage = "Please input campus name")]
         public string Name { get; set; } = null!;
     }

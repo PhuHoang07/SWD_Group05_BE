@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessObjects.DTOs.CampusDTOs
+namespace BusinessObjects.DTOs.CategoryDTOs
 {
-    public class CampusRequestModel
+    public class CategoryRequestModel
     {
         [Required(ErrorMessage = "Please input campus id")]
         public string Id { get; set; } = null!;
