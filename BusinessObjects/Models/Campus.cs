@@ -9,5 +9,7 @@ public partial class Campus
 
     public string Name { get; set; } = null!;
 
+    public bool Status { get; set; }
+
     public virtual ICollection<ProductTransaction> ProductTransactions { get; set; } = new List<ProductTransaction>();
 }

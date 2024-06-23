@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Models;
+﻿    using BusinessObjects.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -43,6 +43,16 @@ namespace GoodsExchangeAtFUManagement.Service.Ultis
             var _tokenHandler = new JwtSecurityTokenHandler();
             Claim? claim = _tokenHandler.ReadJwtToken(jwtToken).Claims.FirstOrDefault(selector => selector.Type.ToString().Equals(nameClaim));
             return claim != null ? claim.Value : "Error!!!";
+        }
+
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
     }

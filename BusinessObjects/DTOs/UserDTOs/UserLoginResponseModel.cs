@@ -10,7 +10,7 @@ namespace GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs
     {
         public UserInfo UserInfo { get; set; } = null!;
         public string token { get; set; } = null!;
-
+        public string refreshToken { get; set; } = null!;
     }
 
     public class UserInfo
