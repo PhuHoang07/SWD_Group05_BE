@@ -27,6 +27,8 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
 
         public async Task Insert(TEntity entity) => await GenericDAO<TEntity>.Instance.Insert(entity);
 
+        public async Task InsertRange(List<TEntity> entities) => await GenericDAO<TEntity>.Instance.InsertRange(entities);
+
         public async Task Delete(object id) => await GenericDAO<TEntity>.Instance.Delete(id);
 
         public async Task Update(TEntity entityToUpdate) => await GenericDAO<TEntity>.Instance.Update(entityToUpdate);

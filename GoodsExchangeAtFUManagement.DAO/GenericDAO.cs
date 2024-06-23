@@ -101,6 +101,12 @@ namespace GoodsExchangeAtFUManagement.DAO
             await context.SaveChangesAsync();
         }
 
+        public async Task InsertRange(List<TEntity> entities)
+        {
+            await dbSet.AddRangeAsync(entities);
+            await context.SaveChangesAsync();
+        }
+
         public async Task Delete(object id)
         {
             TEntity entityToDelete = await dbSet.FindAsync(id);

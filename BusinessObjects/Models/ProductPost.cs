@@ -23,6 +23,10 @@ public partial class ProductPost
 
     public string PostModeId { get; set; } = null!;
 
+    public string CampusId { get; set; } = null!;
+
+    public virtual Campus Campus { get; set; } = null!;
+
     public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();

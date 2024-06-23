@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace GoodsExchangeAtFUManagement.DAO
 {
+
     public partial class GoodsExchangeAtFuContext : DbContext
     {
         public GoodsExchangeAtFuContext()
@@ -322,6 +323,10 @@ namespace GoodsExchangeAtFUManagement.DAO
                     .HasMaxLength(36)
                     .IsUnicode(false)
                     .IsFixedLength();
+                entity.Property(e => e.CampusId)
+                    .HasMaxLength(36)
+                    .IsUnicode(false)
+                    .IsFixedLength();
                 entity.Property(e => e.CategoryId)
                     .HasMaxLength(36)
                     .IsUnicode(false)
@@ -343,6 +348,11 @@ namespace GoodsExchangeAtFUManagement.DAO
                     .HasMaxLength(50)
                     .IsUnicode(false);
                 entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.HasOne(d => d.Campus).WithMany(p => p.ProductPosts)
+                    .HasForeignKey(d => d.CampusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductPost_Campus");
 
                 entity.HasOne(d => d.Category).WithMany(p => p.ProductPosts)
                     .HasForeignKey(d => d.CategoryId)
@@ -376,10 +386,6 @@ namespace GoodsExchangeAtFUManagement.DAO
                     .HasMaxLength(36)
                     .IsUnicode(false)
                     .IsFixedLength();
-                entity.Property(e => e.CampusId)
-                    .HasMaxLength(36)
-                    .IsUnicode(false)
-                    .IsFixedLength();
                 entity.Property(e => e.Price)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -392,10 +398,10 @@ namespace GoodsExchangeAtFUManagement.DAO
                     .IsUnicode(false);
                 entity.Property(e => e.TransactAt).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Campus).WithMany(p => p.ProductTransactions)
-                    .HasForeignKey(d => d.CampusId)
+                entity.HasOne(d => d.Buyer).WithMany(p => p.ProductTransactions)
+                    .HasForeignKey(d => d.BuyerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProductTr__Campu__5BE2A6F2");
+                    .HasConstraintName("FK_ProductTransaction_User");
 
                 entity.HasOne(d => d.ProductPost).WithMany(p => p.ProductTransactions)
                     .HasForeignKey(d => d.ProductPostId)

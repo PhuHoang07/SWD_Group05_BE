@@ -11,5 +11,5 @@ public partial class Campus
 
     public bool Status { get; set; }
 
-    public virtual ICollection<ProductTransaction> ProductTransactions { get; set; } = new List<ProductTransaction>();
+    public virtual ICollection<ProductPost> ProductPosts { get; set; } = new List<ProductPost>();
 }
