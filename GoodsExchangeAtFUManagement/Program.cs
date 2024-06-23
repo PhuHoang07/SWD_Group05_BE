@@ -6,6 +6,7 @@ using GoodsExchangeAtFUManagement.Repository.Repositories.CategoryRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CoinPackRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.PostModeRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.ProductImagesRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ProductPostRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
@@ -49,6 +50,7 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICoinPackRepository, CoinPackRepository>();
 builder.Services.AddTransient<IPostModeRepository, PostModeRepository>();
 builder.Services.AddTransient<IProductPostRepository, ProductPostRepository>();
+builder.Services.AddTransient<IProductImagesRepository, ProductImagesRepository>();
 
 //=========================================== SERVICE =============================================
 

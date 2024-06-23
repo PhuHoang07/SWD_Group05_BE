@@ -26,6 +26,8 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
 
         Task Insert(TEntity entity);
 
+        Task InsertRange(List<TEntity> entities);
+
         Task Delete(object id);
 
         Task Update(TEntity entityToUpdate);
