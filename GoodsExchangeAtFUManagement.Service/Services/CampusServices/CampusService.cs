@@ -21,57 +21,38 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             _campusRepository = campusRepository;
         }
 
-        private void EnsureAuthorization(string token, bool requireAdmin = false)
+        public async Task CreateCampus(CampusCreateRequestModel request)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw new UnauthorizedAccessException("Authorization required");
-            }
-
-            var userId = JwtGenerator.DecodeToken(token, "userId");
-            if (userId == null)
-            {
-                throw new UnauthorizedAccessException("Authorization required");
-            }
-
-            if (requireAdmin)
-            {
-                var role = JwtGenerator.DecodeToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
-                if (role != "Admin")
-                {
-                    throw new UnauthorizedAccessException("Only admins can perform this action");
-                }
-            }
-        }
-
-        public async Task CreateCampus(CampusCreateRequestModel request, string token)
-        {
-            EnsureAuthorization(token, true); 
             Campus currentCampus = await _campusRepository.GetSingle(c => c.Name.Equals(request.Name));
             if (currentCampus != null)
             {
-                throw new Exception("Campus Name has existed");
+                throw new CustomException("Campus Name has existed");
             }
             Campus newCampus = _mapper.Map<Campus>(request);
             newCampus.Id = Guid.NewGuid().ToString();
+            newCampus.Status = true;
             await _campusRepository.Insert(newCampus);
         }
 
-        public async Task DeleteCampus(string id, string token)
+        public async Task DeleteCampus(string id)
         {
-            EnsureAuthorization(token, true); 
             Campus deleteCampus = await _campusRepository.GetSingle(c => c.Id.Equals(id));
             if (deleteCampus == null)
             {
-                throw new Exception("Campus not found");
+                throw new CustomException("Campus not found");
             }
-            await _campusRepository.Delete(deleteCampus.Id);
+            if (deleteCampus.Status == false)
+            {
+                throw new CustomException("Campus is already be removed");
+            }
+            deleteCampus.Status = false;
+            await _campusRepository.Update(deleteCampus);
         }
 
         public async Task<List<CampusResponseModel>> GetAllCampus()
         {
          
-            var campuses = await _campusRepository.Get();
+            var campuses = await _campusRepository.Get(c => c.Status == true);
             var campusResponses = _mapper.Map<List<CampusResponseModel>>(campuses);
             return campusResponses;
         }
@@ -81,19 +62,18 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             var campus = await _campusRepository.GetSingle(c => c.Id.Equals(id));
             if (campus == null)
             {
-                throw new Exception("Campus not found");
+                throw new CustomException("Campus not found");
             }
             var campusResponse = _mapper.Map<CampusResponseModel>(campus);
             return campusResponse;
         }
 
-        public async Task UpdateCampus(CampusRequestModel request, string token)
+        public async Task UpdateCampus(CampusRequestModel request)
         {
-            EnsureAuthorization(token, true); 
             var campus = await _campusRepository.GetSingle(c => c.Id.Equals(request.Id));
             if (campus == null)
             {
-                throw new Exception("Campus not found");
+                throw new CustomException("Campus not found");
             }
             campus.Name = request.Name;
             await _campusRepository.Update(campus);

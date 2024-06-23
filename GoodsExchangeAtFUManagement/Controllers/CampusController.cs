@@ -18,109 +18,57 @@ namespace GoodsExchangeAtFUManagement.Controllers
             _campusService = campusService;
         }
 
-        private string GetTokenFromHeader()
-        {
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                throw new UnauthorizedAccessException("Authorization token is missing or invalid.");
-            }
+        //private string GetTokenFromHeader()
+        //{
+        //    var authHeader = Request.Headers["Authorization"].ToString();
+        //    if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+        //    {
+        //        throw new UnauthorizedAccessException("Authorization token is missing or invalid.");
+        //    }
 
-            return authHeader.Split(" ")[1];
-        }
+        //    return authHeader.Split(" ")[1];
+        //}
 
 
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateCampus([FromBody] CampusCreateRequestModel request)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid campus data.");
-            }
-
-            try
-            { 
-                string token = GetTokenFromHeader();
-                await _campusService.CreateCampus(request, token);
-                return Ok("Campus created successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _campusService.CreateCampus(request);
+            return Ok("Campus created successfully!");
         }
 
         [HttpGet]
         [Route("view-all")]
         public async Task<IActionResult> GetAllCampus()
         {
-            try
-            {
-                var campuses = await _campusService.GetAllCampus();
-                return Ok(campuses);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var campuses = await _campusService.GetAllCampus();
+            return Ok(campuses);
         }
 
         [HttpGet]
         [Route("view/{id}")]
         public async Task<IActionResult> GetCampusById(string id)
         {
-            try
-            {
-                
-                var campus = await _campusService.GetCampusById(id);
-                if (campus == null)
-                {
-                    return NotFound("Campus not found.");
-                }
-                return Ok(campus);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var campus = await _campusService.GetCampusById(id);
+            return Ok(campus);
         }
 
         [HttpPut]
         [Route("update")]
         public async Task<IActionResult> UpdateCampus([FromBody] CampusRequestModel request)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid campus data.");
-            }
 
-            try
-            {
-                string token = GetTokenFromHeader();
-                await _campusService.UpdateCampus(request,token);
-                return Ok("Campus updated successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _campusService.UpdateCampus(request);
+            return Ok("Campus updated successfully!");
         }
 
-        [HttpDelete]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteCampus(string id)
+        [HttpPut]
+        [Route("soft-remove")]
+        public async Task<IActionResult> SoftRemoveCampus(string id)
         {
-            try
-            {
-                string token = GetTokenFromHeader();
-                await _campusService.DeleteCampus(id, token);
-                return Ok("Campus deleted successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _campusService.DeleteCampus(id);
+            return Ok("Campus deleted successfully!");
         }
     }
 }

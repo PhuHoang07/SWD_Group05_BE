@@ -17,112 +17,49 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         public CategoryController(ICategoryService categoryService)
         {
-           _categoryService = categoryService;
-        }
-
-        private string GetTokenFromHeader()
-        {
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                throw new UnauthorizedAccessException("Authorization token is missing or invalid.");
-            }
-
-            return authHeader.Split(" ")[1];
+            _categoryService = categoryService;
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [Route("create")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateRequestModel request)
+        public async Task<IActionResult> CreateCategory(CategoryCreateRequestModel request)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid category data.");
-            }
-
-            try
-            {
-                string token = GetTokenFromHeader();
-                await _categoryService.CreateCategory(request, token);
-                return Ok("Category created successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _categoryService.CreateCategory(request);
+            return Ok("Category created successfully!");
         }
 
         [HttpGet]
         [Route("view-all")]
         public async Task<IActionResult> GetAllCategory()
         {
-            try
-            {
-                var campuses = await _categoryService.GetAllCategory();
-                return Ok(campuses);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var categoryList = await _categoryService.GetAllCategory();
+            return Ok(categoryList);
         }
 
         [HttpGet]
         [Route("view/{id}")]
         public async Task<IActionResult> GetCategoryById(string id)
         {
-            try
-            {
-
-                var campus = await _categoryService.GetCategoryById(id);
-                if (campus == null)
-                {
-                    return NotFound("Category not found.");
-                }
-                return Ok(campus);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var category = await _categoryService.GetCategoryById(id);
+            return Ok(category);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestModel request)
+        public async Task<IActionResult> UpdateCategory(CategoryRequestModel request)
         {
-            if (request == null)
-            {
-                return BadRequest("Invalid category data.");
-            }
-
-            try
-            {
-                string token = GetTokenFromHeader();
-                await _categoryService.UpdateCategory(request, token);
-                return Ok("Category updated successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _categoryService.UpdateCategory(request);
+            return Ok("Category updated successfully!");
         }
 
-        [HttpDelete]
-        [Route("delete")]
-        public async Task<IActionResult> DeleteCategory(string id)
+        [HttpPut]
+        [Route("soft-remove")]
+        public async Task<IActionResult> SoftRemovedCategory(string id)
         {
-            try
-            {
-                string token = GetTokenFromHeader();
-                await _categoryService.DeleteCategory(id, token);
-                return Ok("Category deleted successfully!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _categoryService.DeleteCategory(id);
+            return Ok("Category soft removed successfully!");
         }
     }
 }

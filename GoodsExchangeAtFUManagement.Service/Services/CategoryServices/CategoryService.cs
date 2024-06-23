@@ -23,56 +23,38 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
             _categoryRepository = categoryRepository;
         }
 
-        private void EnsureAuthorization(string token, bool requireAdmin = false)
+
+        public async Task CreateCategory(CategoryCreateRequestModel request)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw new UnauthorizedAccessException("Authorization required");
-            }
-
-            var userId = JwtGenerator.DecodeToken(token, "userId");
-            if (userId == null)
-            {
-                throw new UnauthorizedAccessException("Authorization required");
-            }
-
-            if (requireAdmin)
-            {
-                var role = JwtGenerator.DecodeToken(token, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
-                if (role != "Admin")
-                {
-                    throw new UnauthorizedAccessException("Only admins can perform this action");
-                }
-            }
-        }
-
-        public async Task CreateCategory(CategoryCreateRequestModel request, string token)
-        {
-            EnsureAuthorization(token, true);
             Category currentCategory = await _categoryRepository.GetSingle(c => c.Name.Equals(request.Name));
             if (currentCategory != null)
             {
-                throw new Exception("Category Name has existed");
+                throw new CustomException("Category Name has existed");
             }
             Category newCategory = _mapper.Map<Category>(request);
             newCategory.Id = Guid.NewGuid().ToString();
+            newCategory.Status = true;
             await _categoryRepository.Insert(newCategory);
         }
 
-        public async Task DeleteCategory(string id, string token)
+        public async Task DeleteCategory(string id)
         {
-            EnsureAuthorization(token, true);
             Category deleteCategory = await _categoryRepository.GetSingle(c => c.Id.Equals(id));
             if (deleteCategory == null)
             {
-                throw new Exception("Category not found");
+                throw new CustomException("Category not found");
             }
-            await _categoryRepository.Delete(deleteCategory.Id);
+            if (deleteCategory.Status == false)
+            {
+                throw new CustomException("The category is already be removed");
+            }
+            deleteCategory.Status = false;
+            await _categoryRepository.Update(deleteCategory);
         }
 
         public async Task<List<CategoryResponseModel>> GetAllCategory()
         {
-            var categories = await _categoryRepository.Get();
+            var categories = await _categoryRepository.Get(c => c.Status == true);
             var categoryResponses = _mapper.Map<List<CategoryResponseModel>>(categories);
             return categoryResponses;
         }
@@ -82,19 +64,18 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
             var category = await _categoryRepository.GetSingle(c => c.Id.Equals(id));
             if (category == null)
             {
-                throw new Exception("Category not found");
+                throw new CustomException("Category not found");
             }
             var categoryResponse = _mapper.Map<CategoryResponseModel>(category);
             return categoryResponse;
         }
 
-        public async Task UpdateCategory(CategoryRequestModel request, string token)
+        public async Task UpdateCategory(CategoryRequestModel request)
         {
-            EnsureAuthorization(token, true);
             var category = await _categoryRepository.GetSingle(c => c.Id.Equals(request.Id));
             if (category == null)
             {
-                throw new Exception("Category not found");
+                throw new CustomException("Category not found");
             }
             category.Name = request.Name;
             await _categoryRepository.Update(category);
