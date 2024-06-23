@@ -37,7 +37,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinPackServices
             var showList = _mapper.Map<List<CoinPackResponseModel>>(coinList);
             return showList;
         }
-        
+
         public async Task<List<CoinPackManageResponseModel>> ViewAllListCoinPack()
         {
             var coinList = await _coinPackRepository.Get();
@@ -45,38 +45,47 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinPackServices
             return showList;
         }
 
-        public async Task<CoinPackResponseModel> GetCoinPackById(string id)
+        public async Task<CoinPackManageResponseModel> GetCoinPackById(string id)
         {
             var coinPack = await _coinPackRepository.GetSingle(c => c.Id.Equals(id));
-            var coinPackInfo = _mapper.Map<CoinPackResponseModel>(coinPack);
+            if (coinPack == null)
+            {
+                throw new CustomException("The chosen coin pack is not existed");
+            }
+            var coinPackInfo = _mapper.Map<CoinPackManageResponseModel>(coinPack);
             return coinPackInfo;
         }
 
-        public async Task UpdateCoinPack(CoinPackUpdateRequestModel requestModel)
+        public async Task UpdateCoinPack(CoinPackUpdateRequestModel requestModel, string id)
         {
-            var coinPack = await _coinPackRepository.GetSingle(c => c.Id.Equals(requestModel.Id));
-            if (coinPack == null)
+            if (id == null)
             {
-                throw new CustomException("Cant find the coin pack");
+                throw new CustomException("Please input id for update");
             }
-            coinPack.CoinAmount = requestModel.CoinAmount;
-            coinPack.Price = requestModel.Price;
-            await _coinPackRepository.Update(coinPack);
-        }
-
-        public async Task SoftRemoveCoinPack(string id)
-        {
             var coinPack = await _coinPackRepository.GetSingle(c => c.Id.Equals(id));
             if (coinPack == null)
             {
                 throw new CustomException("Cant find the coin pack");
             }
-            if (coinPack.Status.Equals(CoinPackStatus.Inactive.ToString()))
-            {
-                throw new CustomException("This coin pack is already be removed");
-            }
-            coinPack.Status = CoinPackStatus.Inactive.ToString();
+            _mapper.Map(requestModel, coinPack);
             await _coinPackRepository.Update(coinPack);
+        }
+
+        public async Task SoftRemoveCoinPack(List<string> listId)
+        {
+            var coinPackList = await _coinPackRepository.Get(c => listId.Contains(c.Id));
+            foreach (var coinPack in coinPackList)
+            {
+                if (coinPack.Status.Equals(CoinPackStatus.Inactive.ToString()))
+                {
+                    throw new CustomException("The chosen coin pack is already removed");
+                }
+                else
+                {
+                    coinPack.Status = CoinPackStatus.Inactive.ToString();
+                }
+            }
+            await _coinPackRepository.UpdateRange(coinPackList.ToList());
         }
     }
 }

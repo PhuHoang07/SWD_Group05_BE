@@ -9,7 +9,6 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api/coin-pack")]
     [ApiController]
-    [Authorize]
     public class CoinPackController : ControllerBase
     {
         private readonly ICoinPackService _coinPackService;
@@ -56,20 +55,20 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        [Route("update")]
-        public async Task<IActionResult> UpdateCoinPacks(CoinPackUpdateRequestModel requestModel)
+        [Route("update/{id}")]
+        public async Task<IActionResult> UpdateCoinPacks(CoinPackUpdateRequestModel requestModel, string id)
         {
-            await _coinPackService.UpdateCoinPack(requestModel);
+            await _coinPackService.UpdateCoinPack(requestModel, id);
             return Ok("Coin pack update successfully");
         }
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        [Route("soft-remove/{id}")]
-        public async Task<IActionResult> SoftRemoveCoinPacks(string id)
+        [Route("soft-remove")]
+        public async Task<IActionResult> SoftRemoveCoinPacks(List<string> id)
         {
             await _coinPackService.SoftRemoveCoinPack(id);
-            return Ok("Coin pack update successfully");
+            return Ok("Coin pack(s) remove successfully");
         }
 
     }

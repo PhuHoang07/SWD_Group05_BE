@@ -134,5 +134,11 @@ namespace GoodsExchangeAtFUManagement.DAO
             }
             return await query.CountAsync();
         }
+
+        public async Task UpdateRange(List<TEntity> entities)
+        {
+            context.UpdateRange(entities);
+            await context.SaveChangesAsync();
+        }
     }
 }
