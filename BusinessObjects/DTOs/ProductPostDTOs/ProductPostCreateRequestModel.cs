@@ -21,7 +21,13 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
         [Required(ErrorMessage = "Please choose category of product post")]
         public string CategoryId { get; set; } = null!;
 
+        [Required(ErrorMessage = "Please choose campus of product post")]
+        public string CampusId { get; set; } = null!;
+
         [Required(ErrorMessage = "Please choose post mode of product post")]
         public string PostModeId { get; set; } = null!;
+
+        [Required(ErrorMessage = "Please choose image(s) for product post")]
+        public List<string> ImagesUrl { get; set; } = null!;
     }
 }
