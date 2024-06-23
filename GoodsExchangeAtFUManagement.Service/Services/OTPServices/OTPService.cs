@@ -90,7 +90,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
                     throw new CustomException("The OTP is incorrect");
                 }
 
-                _otpCodeRepository.Update(latestOTP);
+                await _otpCodeRepository.Update(latestOTP);
                
             }
         }

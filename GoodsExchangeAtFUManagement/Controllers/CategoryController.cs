@@ -10,7 +10,6 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api/category")]
     [ApiController]
-    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

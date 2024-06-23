@@ -12,8 +12,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinPackServices
         Task CreateCoinPack(CoinPackCreateRequestModel request);
         Task<List<CoinPackResponseModel>> ViewActiveListCoinPack();
         Task<List<CoinPackManageResponseModel>> ViewAllListCoinPack();
-        Task<CoinPackResponseModel> GetCoinPackById(string id);
-        Task UpdateCoinPack(CoinPackUpdateRequestModel requestModel);
-        Task SoftRemoveCoinPack(string id);
+        Task<CoinPackManageResponseModel> GetCoinPackById(string id);
+        Task UpdateCoinPack(CoinPackUpdateRequestModel requestModel, string id);
+        Task SoftRemoveCoinPack(List<string> listId);
     }
 }

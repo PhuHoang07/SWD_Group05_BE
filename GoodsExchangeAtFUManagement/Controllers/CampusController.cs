@@ -18,18 +18,6 @@ namespace GoodsExchangeAtFUManagement.Controllers
             _campusService = campusService;
         }
 
-        //private string GetTokenFromHeader()
-        //{
-        //    var authHeader = Request.Headers["Authorization"].ToString();
-        //    if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-        //    {
-        //        throw new UnauthorizedAccessException("Authorization token is missing or invalid.");
-        //    }
-
-        //    return authHeader.Split(" ")[1];
-        //}
-
-
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreateCampus([FromBody] CampusCreateRequestModel request)
