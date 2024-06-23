@@ -1,7 +1,9 @@
 ﻿using BusinessObjects.DTOs.CampusDTOs;
+using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Controllers
@@ -28,9 +30,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCampus()
+        public async Task<IActionResult> GetAllCampus(int pageIndex, int pageSize)
         {
-            var campuses = await _campusService.GetAllCampus();
+            Expression<Func<Campus, bool>> filter = c => c.Status == true;
+            var campuses = await _campusService.GetAllCampus(filter, pageIndex, pageSize);
             return Ok(campuses);
         }
 
