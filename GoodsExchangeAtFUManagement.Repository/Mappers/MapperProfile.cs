@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.DTOs.CategoryDTOs;
+using BusinessObjects.DTOs.CoinPackDTOs;
+using BusinessObjects.DTOs.PostModeDTOs;
+using BusinessObjects.DTOs.ProductPostDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using System;
@@ -15,14 +18,29 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
     {
         public MapperProfile()
         {
+            //User
             CreateMap<UserRegisterRequestModel, User>();
             CreateMap<UserRegisterRequestTestingModel, User>();
+            //Campus
             CreateMap<CampusRequestModel, Campus>();
             CreateMap<CampusCreateRequestModel, Campus>();
             CreateMap<Campus, CampusResponseModel>();
+            //Category
             CreateMap<CategoryRequestModel, Category>();
             CreateMap<CategoryCreateRequestModel, Category>();
             CreateMap<Category, CategoryResponseModel>();
+            //CoinPack
+            CreateMap<CoinPackCreateRequestModel, CoinPack>();
+            CreateMap<CoinPackUpdateRequestModel, CoinPack>();
+            CreateMap<CoinPack, CoinPackResponseModel > ();
+            CreateMap<CoinPack, CoinPackManageResponseModel>();
+            //ProductPost
+            CreateMap<ProductPostCreateRequestModel, ProductPost>();
+            //PostMode
+            CreateMap<PostModeCreateRequestModel, PostMode>();
+            CreateMap<PostModeUpdateRequestModel, PostMode>();
+            CreateMap<PostMode, PostModeResponseModel>();
+            CreateMap<PostMode, PostModeManageResponseModel>(); 
         }
     }
 }
