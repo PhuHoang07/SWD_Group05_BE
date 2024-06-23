@@ -12,8 +12,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
     {
         Task<List<CategoryResponseModel>> GetAllCategory();
         Task<CategoryResponseModel> GetCategoryById(string id);
-        Task CreateCategory(CategoryCreateRequestModel request, string token);
-        Task UpdateCategory(CategoryRequestModel request, string token);
-        Task DeleteCategory(string id, string token);
+        Task CreateCategory(CategoryCreateRequestModel request);
+        Task UpdateCategory(CategoryRequestModel request);
+        Task DeleteCategory(string id);
     }
 }

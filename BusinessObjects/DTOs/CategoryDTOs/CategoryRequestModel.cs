@@ -9,10 +9,10 @@ namespace BusinessObjects.DTOs.CategoryDTOs
 {
     public class CategoryRequestModel
     {
-        [Required(ErrorMessage = "Please input campus id")]
+        [Required(ErrorMessage = "Please input category id")]
         public string Id { get; set; } = null!;
 
-        [Required(ErrorMessage = "Please input campus name")]
+        [Required(ErrorMessage = "Please input catgory name")]
         public string Name { get; set; } = null!;
     }
 }
