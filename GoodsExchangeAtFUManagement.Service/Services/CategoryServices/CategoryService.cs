@@ -7,6 +7,7 @@ using GoodsExchangeAtFUManagement.Service.Ultis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,9 +53,9 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
             await _categoryRepository.Update(deleteCategory);
         }
 
-        public async Task<List<CategoryResponseModel>> GetAllCategory()
+        public async Task<List<CategoryResponseModel>> GetAllCategory(Expression<Func<Category, bool>> filter, int pageIndex, int pageSize)
         {
-            var categories = await _categoryRepository.Get(c => c.Status == true);
+            var categories = await _categoryRepository.Get(c => c.Status == true, pageIndex: pageIndex, pageSize: pageSize);
             var categoryResponses = _mapper.Map<List<CategoryResponseModel>>(categories);
             return categoryResponses;
         }
@@ -73,7 +74,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
         public async Task UpdateCategory(CategoryRequestModel request)
         {
             var category = await _categoryRepository.GetSingle(c => c.Id.Equals(request.Id));
-            if (category == null)
+            if (category == null || category.Status == false)
             {
                 throw new CustomException("Category not found");
             }
