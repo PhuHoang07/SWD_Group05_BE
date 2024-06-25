@@ -4,6 +4,7 @@ using BusinessObjects.DTOs.CategoryDTOs;
 using BusinessObjects.DTOs.CoinPackDTOs;
 using BusinessObjects.DTOs.PostModeDTOs;
 using BusinessObjects.DTOs.ProductPostDTOs;
+using BusinessObjects.DTOs.UserDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using System;
@@ -21,6 +22,9 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //User
             CreateMap<UserRegisterRequestModel, User>();
             CreateMap<UserRegisterRequestTestingModel, User>();
+            CreateMap<UpdateUserRequestModel, User>(); 
+            CreateMap<User, ViewUserResponseModel>();  
+
             //Campus
             CreateMap<CampusRequestModel, Campus>();
             CreateMap<CampusCreateRequestModel, Campus>();
