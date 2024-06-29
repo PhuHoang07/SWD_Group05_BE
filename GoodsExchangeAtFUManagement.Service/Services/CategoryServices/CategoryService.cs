@@ -53,9 +53,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
             await _categoryRepository.Update(deleteCategory);
         }
 
-        public async Task<List<CategoryResponseModel>> GetAllCategory(Expression<Func<Category, bool>> filter, int pageIndex, int pageSize)
+        public async Task<List<CategoryResponseModel>> GetAllCategory(string searchQuery, int pageIndex, int pageSize)
         {
-            var categories = await _categoryRepository.Get(c => c.Status == true, pageIndex: pageIndex, pageSize: pageSize);
+            Expression<Func<Category, bool>> searchFilter = c => c.Status == true && (string.IsNullOrEmpty(searchQuery) || c.Name.Contains(searchQuery));
+
+            var categories = await _categoryRepository.Get(searchFilter, pageIndex: pageIndex, pageSize: pageSize);
             var categoryResponses = _mapper.Map<List<CategoryResponseModel>>(categories);
             return categoryResponses;
         }
@@ -78,7 +80,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
             {
                 throw new CustomException("Category not found");
             }
-            category.Name = request.Name;
+            if (!string.IsNullOrEmpty(request.Name))
+            {
+                category.Name = request.Name;
+            }
+          
             await _categoryRepository.Update(category);
         }
     }

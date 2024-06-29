@@ -22,10 +22,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllUser(int pageIndex, int pageSize)
+        public async Task<IActionResult> GetAllUser(int pageIndex, int pageSize, string searchQuery = null)
         {
             
-            var users = await _userService.GetAllUser(pageIndex, pageSize);
+            var users = await _userService.GetAllUser(searchQuery, pageIndex, pageSize);
             return Ok(users);
         }
 

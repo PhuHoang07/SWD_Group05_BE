@@ -14,6 +14,7 @@ namespace BusinessObjects.DTOs.CampusDTOs
 
         [Required(ErrorMessage = "Please input campus name")]
         public string Name { get; set; } = null!;
-        
+
+
     }
 }

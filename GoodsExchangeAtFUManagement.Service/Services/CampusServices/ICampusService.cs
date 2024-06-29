@@ -11,7 +11,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
 {
     public interface ICampusService
     {
-        Task<List<CampusResponseModel>> GetAllCampus(Expression<Func<Campus, bool>> filter, int pageIndex, int pageSize);
+        Task<List<CampusResponseModel>> GetAllCampus(string searchQuery, int pageIndex, int pageSize);
         Task<CampusResponseModel> GetCampusById(string id);
         Task CreateCampus(CampusCreateRequestModel  request);
         Task UpdateCampus(CampusRequestModel request);

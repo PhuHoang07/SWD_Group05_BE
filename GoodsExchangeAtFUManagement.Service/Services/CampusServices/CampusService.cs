@@ -50,12 +50,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             await _campusRepository.Update(deleteCampus);
         }
 
-        public async Task<List<CampusResponseModel>> GetAllCampus(Expression<Func<Campus, bool>> filter, int pageIndex, int pageSize)
+        public async Task<List<CampusResponseModel>> GetAllCampus(string searchQuery, int pageIndex, int pageSize)
         {
-            var campuses = await _campusRepository.Get(c => c.Status == true, pageIndex: pageIndex, pageSize: pageSize);
+            Expression<Func<Campus, bool>> searchFilter = c => c.Status == true && (string.IsNullOrEmpty(searchQuery) || c.Name.Contains(searchQuery)); ;
+            var campuses = await _campusRepository.Get(searchFilter, pageIndex: pageIndex, pageSize: pageSize);
             var campusResponses = _mapper.Map<List<CampusResponseModel>>(campuses);
             return campusResponses;
         }
+
         public async Task<CampusResponseModel> GetCampusById(string id)
         {         
             var campus = await _campusRepository.GetSingle(c => c.Id.Equals(id));
@@ -74,7 +76,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
             {
                 throw new CustomException("Campus not found");
             }
-            campus.Name = request.Name;
+            if (!string.IsNullOrEmpty(request.Name))
+            {
+               campus.Name = request.Name;
+            }
+
             await _campusRepository.Update(campus);
         }
     }
