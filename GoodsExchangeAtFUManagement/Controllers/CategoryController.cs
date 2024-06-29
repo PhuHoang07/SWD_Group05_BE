@@ -33,10 +33,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCategory(int pageIndex, int pageSize)
+        public async Task<IActionResult> GetAllCategory(int pageIndex, int pageSize, string searchQuery = null)
         {
-            Expression<Func<Category, bool>> filter = c => c.Status == true;
-            var categoryList = await _categoryService.GetAllCategory(filter, pageIndex, pageSize);
+          
+            var categoryList = await _categoryService.GetAllCategory(searchQuery, pageIndex, pageSize);
             return Ok(categoryList);
         }
 

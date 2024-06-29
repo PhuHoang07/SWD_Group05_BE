@@ -175,9 +175,15 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             await _userRepository.Update(user);
         }
 
-        public async Task<List<ViewUserResponseModel>> GetAllUser(int pageIndex, int pageSize)
+        public async Task<List<ViewUserResponseModel>> GetAllUser(string searchQuery, int pageIndex, int pageSize)
         {
-            var users = await _userRepository.Get(pageIndex: pageIndex, pageSize: pageSize);
+            Expression<Func<User, bool>> searchFilter = u => string.IsNullOrEmpty(searchQuery) ||
+                                                               u.Email.Contains(searchQuery) ||
+                                                               u.PhoneNumber.Contains(searchQuery) ||
+                                                               u.Role.Contains(searchQuery) ||
+                                                               u.Status.Contains(searchQuery);
+
+            var users = await _userRepository.Get(searchFilter,pageIndex: pageIndex, pageSize: pageSize);
             var userResponses = _mapper.Map<List<ViewUserResponseModel>>(users);
             return userResponses;
         }

@@ -30,10 +30,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCampus(int pageIndex, int pageSize)
+        public async Task<IActionResult> GetAllCampus( int pageIndex, int pageSize, string searchQuery = null)
         {
-            Expression<Func<Campus, bool>> filter = c => c.Status == true;
-            var campuses = await _campusService.GetAllCampus(filter, pageIndex, pageSize);
+            var campuses = await _campusService.GetAllCampus(searchQuery, pageIndex, pageSize);
             return Ok(campuses);
         }
 

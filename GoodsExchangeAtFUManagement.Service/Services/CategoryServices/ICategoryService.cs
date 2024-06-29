@@ -12,7 +12,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CategoryServices
 {
     public interface ICategoryService
     {
-        Task<List<CategoryResponseModel>> GetAllCategory(Expression<Func<Category, bool>> filter, int pageIndex, int pageSize);
+        Task<List<CategoryResponseModel>> GetAllCategory(string searchQuery, int pageIndex, int pageSize);
         Task<CategoryResponseModel> GetCategoryById(string id);
         Task CreateCategory(CategoryCreateRequestModel request);
         Task UpdateCategory(CategoryRequestModel request);
