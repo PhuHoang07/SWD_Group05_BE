@@ -2,7 +2,6 @@
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Controllers
 {
@@ -28,9 +27,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCampus()
+        public async Task<IActionResult> GetAllCampus( int pageIndex, int pageSize, string searchQuery = null)
         {
-            var campuses = await _campusService.GetAllCampus();
+            var campuses = await _campusService.GetAllCampus(searchQuery, pageIndex, pageSize);
             return Ok(campuses);
         }
 
