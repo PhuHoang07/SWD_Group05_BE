@@ -20,8 +20,12 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
 
         public string CreatedBy { get; set; } = null!;
 
-        public string CategoryId { get; set; } = null!;
+        public string Category { get; set; } = null!;
 
-        public string PostModeId { get; set; } = null!;
+        public string PostMode { get; set; } = null!;
+
+        public string Campus { get; set; } = null!;
+
+        public List<string> ImageUrls { get; set; } = null!;
     }
 }

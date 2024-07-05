@@ -78,6 +78,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         {
             var user = await _userRepository.GetSingle(u => u.Email.Equals(request.Email));
 
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
+
             var oldRefreshToken = await _refreshTokenRepository.GetSingle(r => r.UserId == user.Id && r.ExpiredDate > DateTime.Now);
             string token;
             if (oldRefreshToken == null)
@@ -97,10 +102,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                 token = oldRefreshToken.Token;
             }
 
-            if (user == null)
-            {
-                throw new CustomException("There is no account using this email!");
-            }
 
             if (!PasswordHasher.VerifyPassword(request.Password, user.Salt, user.Password))
             {

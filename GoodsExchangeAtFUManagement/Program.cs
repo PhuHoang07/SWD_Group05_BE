@@ -4,7 +4,9 @@ using GoodsExchangeAtFUManagement.Repository.Mappers;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CampusRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CategoryRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CoinPackRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.CoinTransactionRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.OTPCodeRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.PaymentRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.PostModeRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ProductImagesRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ProductPostRepositories;
@@ -13,6 +15,7 @@ using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using GoodsExchangeAtFUManagement.Service.Services.CategoryServices;
 using GoodsExchangeAtFUManagement.Service.Services.CoinPackServices;
+using GoodsExchangeAtFUManagement.Service.Services.CoinTransactionServices;
 using GoodsExchangeAtFUManagement.Service.Services.EmailServices;
 using GoodsExchangeAtFUManagement.Service.Services.OTPServices;
 using GoodsExchangeAtFUManagement.Service.Services.PostModeServices;
@@ -51,6 +54,8 @@ builder.Services.AddTransient<ICoinPackRepository, CoinPackRepository>();
 builder.Services.AddTransient<IPostModeRepository, PostModeRepository>();
 builder.Services.AddTransient<IProductPostRepository, ProductPostRepository>();
 builder.Services.AddTransient<IProductImagesRepository, ProductImagesRepository>();
+builder.Services.AddTransient<ICoinTransactionRepository, CoinTransactionRepository>();
+builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 
 //=========================================== SERVICE =============================================
 
@@ -62,6 +67,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICoinPackService, CoinPackService>();
 builder.Services.AddScoped<IPostModeService, PostModeService>();
 builder.Services.AddScoped<IProductPostService, ProductPostService>();
+builder.Services.AddScoped<ICoinTransactionService, CoinTransactionService>();
 
 //=========================================== CORS ================================================
 

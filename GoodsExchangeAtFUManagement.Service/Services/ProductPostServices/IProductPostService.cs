@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessObjects.DTOs.ProductPostDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
 {
     public interface IProductPostService
     {
+        Task CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token);
+        Task<List<WaitingProductPostResponseModel>> ViewAllWaitingPost(int? pageIndex);
     }
 }
