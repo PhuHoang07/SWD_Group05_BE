@@ -1,9 +1,11 @@
 ﻿using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.DTOs.CategoryDTOs;
+using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using GoodsExchangeAtFUManagement.Service.Services.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Controllers
@@ -31,9 +33,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCategory()
+        public async Task<IActionResult> GetAllCategory(int pageIndex, int pageSize, string searchQuery = null)
         {
-            var categoryList = await _categoryService.GetAllCategory();
+          
+            var categoryList = await _categoryService.GetAllCategory(searchQuery, pageIndex, pageSize);
             return Ok(categoryList);
         }
 
