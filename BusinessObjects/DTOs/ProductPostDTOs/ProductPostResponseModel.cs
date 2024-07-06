@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.DTOs.ProductPostDTOs
 {
-    public class WaitingProductPostResponseModel
+    public class ProductPostResponseModel
     {
         public string Id { get; set; } = null!;
 
@@ -16,7 +16,9 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
 
         public string Price { get; set; } = null!;
 
-        public DateTime ExpiredDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime? ExpiredDate { get; set; }
 
         public string CreatedBy { get; set; } = null!;
 
@@ -27,5 +29,18 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
         public string Campus { get; set; } = null!;
 
         public List<string> ImageUrls { get; set; } = null!;
+    }
+
+    public class PostSearchModel
+    {
+        public string? Title { get; set; }
+
+        public string? Category { get; set; }
+
+        public string? Campus { get; set; }
+
+        public bool? orderPriceDescending { get; set; }
+
+        public bool? orderDateDescending { get; set; }
     }
 }

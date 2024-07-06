@@ -12,6 +12,7 @@ namespace BusinessObjects.Enums
         Open,
         Cancel,
         Pending,
-        Closed
+        Closed, 
+        Expired
     }
 }
