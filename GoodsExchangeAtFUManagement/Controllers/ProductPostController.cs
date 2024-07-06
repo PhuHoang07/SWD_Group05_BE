@@ -17,11 +17,21 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }
 
         [HttpGet]
-        [Route("waiting")]
-        [Authorize(Roles = "Moderator")]
-        public async Task<IActionResult> GetAllWaitingPost(int? pageIndex)
+        [Route("all")]
+        [Authorize(Roles = "Admin, Moderator")]
+        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
         {
-            var result = await _productPostService.ViewAllWaitingPost(pageIndex);
+            var result = await _productPostService.ViewAllPostWithStatus(pageIndex, searchModel, status);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetOwnProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
+        {
+            var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var result = await _productPostService.ViewOwnPostWithStatus(pageIndex, searchModel, status, token);
             return Ok(result);
         }
 
@@ -32,6 +42,15 @@ namespace GoodsExchangeAtFUManagement.Controllers
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
             await _productPostService.CreateWaitingProductPost(requestModel, token);
             return Ok("Create post successfully. Please wait for moderator approving your post");
+        }
+
+        [HttpPut]
+        [Route("approve/{id}")]
+        [Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> ApproveProductPost([FromBody] string status, string id)
+        {
+            await _productPostService.ApprovePost(status, id);
+            return Ok("Approve post successfully");
         }
     }
 }

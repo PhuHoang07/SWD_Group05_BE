@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
 namespace GoodsExchangeAtFUManagement.DAO
 {
 
@@ -335,6 +334,7 @@ namespace GoodsExchangeAtFUManagement.DAO
                     .HasMaxLength(36)
                     .IsUnicode(false)
                     .IsFixedLength();
+                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
                 entity.Property(e => e.Description).HasMaxLength(2048);
                 entity.Property(e => e.ExpiredDate).HasColumnType("datetime");
                 entity.Property(e => e.PostModeId)
