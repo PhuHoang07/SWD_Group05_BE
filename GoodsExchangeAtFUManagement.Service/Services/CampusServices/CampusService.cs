@@ -83,5 +83,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CampusServices
 
             await _campusRepository.Update(campus);
         }
+
     }
 }

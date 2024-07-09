@@ -25,5 +25,22 @@ namespace GoodsExchangeAtFUManagement.Controllers
             await _reportService.CreateReport(request);
             return Ok("Report created successfully!");
         }
+
+        [HttpGet]
+        [Route("view-all")]
+        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, string createdBy, int pageIndex, int pageSize)
+        {
+            var reports = await _reportService.ViewAllReports(searchDate, createdBy, pageIndex, pageSize);
+            return Ok(reports);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> UpdateReport([FromBody] ReportRequestModel request)
+        {
+
+            await _reportService.UpdateReport(request);
+            return Ok("Report updated successfully!");
+        }
     }
 }
