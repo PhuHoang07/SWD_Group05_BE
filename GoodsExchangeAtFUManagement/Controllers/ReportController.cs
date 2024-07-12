@@ -20,9 +20,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateReport([FromBody] CreateReportRequestModel request)
+        public async Task<IActionResult> CreateNewReport([FromBody] CreateReportRequestModel request)
         {
-            await _reportService.CreateReport(request);
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _reportService.CreateReport(request, token);
             return Ok("Report created successfully!");
         }
 

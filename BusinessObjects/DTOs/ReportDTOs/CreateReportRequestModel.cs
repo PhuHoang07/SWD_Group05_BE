@@ -10,10 +10,8 @@ namespace BusinessObjects.DTOs.ReportDTOs
     {
         public string Content { get; set; } = null!;
 
-        public DateTime Date { get; set; }
-
         public string ProductPostId { get; set; } = null!;
 
-        public string CreatedBy { get; set; } = null!;
+       
     }
 }

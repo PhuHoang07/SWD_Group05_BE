@@ -3,6 +3,7 @@ using BusinessObjects.DTOs.ProductPostDTOs;
 using BusinessObjects.DTOs.ReportDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ReportRepositories;
+using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Service.Ultis;
 using MailKit.Search;
 using System;
@@ -18,22 +19,26 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
     {
         private readonly IMapper _mapper;
         private readonly IReportRepository _reportRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ReportService(IReportRepository reportRepository, IMapper mapper)
+        public ReportService(IReportRepository reportRepository, IMapper mapper, IUserRepository userRepository)
         {
             _mapper = mapper;
             _reportRepository = reportRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task CreateReport(CreateReportRequestModel request)
+        public async Task CreateReport(CreateReportRequestModel request, string token)
         {
-            Report currentReport = await _reportRepository.GetSingle(r => r.ProductPostId == request.ProductPostId && r.CreatedBy == request.CreatedBy);
+            var userId = JwtGenerator.DecodeToken( token, "userId");           
+            Report currentReport = await _reportRepository.GetSingle(r => r.ProductPostId == request.ProductPostId);
             if (currentReport != null)
             {
                 throw new CustomException("A report for this product post by this user already exists.");
             }
             Report newReport = _mapper.Map<Report>(request);
             newReport.Id = Guid.NewGuid().ToString();
+            newReport.CreatedBy = userId;
             await _reportRepository.Insert(newReport);
         }
 
