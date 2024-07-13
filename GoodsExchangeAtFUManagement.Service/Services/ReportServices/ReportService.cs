@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +32,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
         public async Task CreateReport(CreateReportRequestModel request, string token)
         {
             var userId = JwtGenerator.DecodeToken(token, "userId");
-            Report currentReport = await _reportRepository.GetSingle(r => r.ProductPostId == request.ProductPostId && r.CreatedBy == userId);
+            var user = await _userRepository.GetSingle(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new CustomException("User not found.");
+            }
+            var currUserId = user.Id;
+
+            Report currentReport = await _reportRepository.GetSingle(r => r.ProductPostId == request.ProductPostId && r.CreatedBy == currUserId);
             if (currentReport != null)
             {
                 throw new CustomException("A report for this product post by this user already exists.");
@@ -63,7 +71,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
 
         public async Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize)
         {
-           
+
+            var reportResponses = new List<ReportResponseModel>();
             Expression<Func<Report, bool>> filter = r => true;
             if (searchDate.HasValue)
             {
@@ -73,9 +82,24 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             Func<IQueryable<Report>, IOrderedQueryable<Report>> orderBy = q => q.OrderByDescending(r => r.Date);
         
             var reports = await _reportRepository.Get(filter, orderBy, pageIndex: pageIndex, pageSize: pageSize);
-         
-            var reportResponses = _mapper.Map<List<ReportResponseModel>>(reports);
 
+            foreach (var report in reports)
+            {
+                var user = await _userRepository.GetSingle(u => u.Id == report.CreatedBy);
+                if (user == null)
+                {                  
+                    throw new CustomException($"User with ID '{report.CreatedBy}' not found.");
+                }
+
+                reportResponses.Add(new ReportResponseModel
+                {
+                    Id = report.Id,
+                    Content = report.Content,
+                    Date = report.Date,
+                    ProductPostId = report.ProductPostId,
+                    CreatedBy = user.Fullname
+                });
+            }
             return reportResponses;
         }
 

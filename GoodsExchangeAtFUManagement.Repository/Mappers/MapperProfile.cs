@@ -49,7 +49,8 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //Report
             CreateMap<ReportRequestModel, Report>();
             CreateMap<CreateReportRequestModel, Report>();
-            CreateMap<Report, ReportResponseModel>();
+            CreateMap<Report, ReportResponseModel>()
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByNavigation.Fullname));
 
 
 
