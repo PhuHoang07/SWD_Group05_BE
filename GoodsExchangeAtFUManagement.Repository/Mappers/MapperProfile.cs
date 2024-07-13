@@ -4,6 +4,7 @@ using BusinessObjects.DTOs.CategoryDTOs;
 using BusinessObjects.DTOs.CoinPackDTOs;
 using BusinessObjects.DTOs.PostModeDTOs;
 using BusinessObjects.DTOs.ProductPostDTOs;
+using BusinessObjects.DTOs.ReportDTOs;
 using BusinessObjects.DTOs.UserDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
@@ -44,7 +45,14 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             CreateMap<PostModeCreateRequestModel, PostMode>();
             CreateMap<PostModeUpdateRequestModel, PostMode>();
             CreateMap<PostMode, PostModeResponseModel>();
-            CreateMap<PostMode, PostModeManageResponseModel>(); 
+            CreateMap<PostMode, PostModeManageResponseModel>();
+            //Report
+            CreateMap<ReportRequestModel, Report>();
+            CreateMap<CreateReportRequestModel, Report>();
+            CreateMap<Report, ReportResponseModel>();
+
+
+
         }
     }
 }
