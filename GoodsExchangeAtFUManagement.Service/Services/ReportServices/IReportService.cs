@@ -12,7 +12,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
     public interface IReportService
     {
         Task CreateReport(CreateReportRequestModel request, string token);
-        Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, string createdBy, int pageIndex, int pageSize);
+        Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize);
         Task UpdateReport(ReportRequestModel request);
        
     }

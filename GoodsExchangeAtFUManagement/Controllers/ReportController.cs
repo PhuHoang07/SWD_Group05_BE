@@ -29,9 +29,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, string createdBy, int pageIndex, int pageSize)
+        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize)
         {
-            var reports = await _reportService.ViewAllReports(searchDate, createdBy, pageIndex, pageSize);
+            var reports = await _reportService.ViewAllReports(searchDate, pageIndex, pageSize);
             return Ok(reports);
         }
 
