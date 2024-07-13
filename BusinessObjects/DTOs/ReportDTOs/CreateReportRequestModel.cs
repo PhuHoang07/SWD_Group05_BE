@@ -12,7 +12,6 @@ namespace BusinessObjects.DTOs.ReportDTOs
 
         public string ProductPostId { get; set; } = null!;
 
-        public string CreatedBy { get; set; } = null!;
 
 
     }

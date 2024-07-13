@@ -32,10 +32,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
         {
             var userId = JwtGenerator.DecodeToken(token, "userId");
             Report currentReport = await _reportRepository.GetSingle(r => r.ProductPostId == request.ProductPostId && r.CreatedBy == userId);
-            if (string.IsNullOrEmpty(request.CreatedBy))
-            {
-                throw new CustomException("The createdBy field is required.");
-            }
             if (currentReport != null)
             {
                 throw new CustomException("A report for this product post by this user already exists.");
