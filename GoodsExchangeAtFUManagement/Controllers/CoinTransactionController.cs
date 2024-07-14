@@ -21,5 +21,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
             await _coinTransactionService.CreateCoinTransaction(coinPackId, token);
             return Ok("Create coin transaction successfully");
         }
+
+
     }
 }
