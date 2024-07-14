@@ -34,8 +34,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
                 throw new CustomException("There is no account with this email");
             }
 
-            var latestOTP = await _otpCodeRepository.GetSingle(o => o.CreatedBy == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
-
+            var latestOTPList = await _otpCodeRepository.Get(o => o.CreatedBy == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
+            var latestOTP = latestOTPList.FirstOrDefault();
             if (latestOTP != null)
             {
                 if ((DateTime.Now - latestOTP.CreatedAt).TotalMinutes < 2)
@@ -72,7 +72,8 @@ namespace GoodsExchangeAtFUManagement.Service.Services.OTPServices
                 throw new CustomException("There is no account with this email");
             }
 
-            var latestOTP = await _otpCodeRepository.GetSingle(o => o.CreatedBy == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
+            var latestOTPList = await _otpCodeRepository.Get(o => o.CreatedBy == currentUser.Id, o => o.OrderByDescending(o => o.CreatedAt));
+            var latestOTP = latestOTPList.FirstOrDefault();
 
             if (latestOTP != null)
             {

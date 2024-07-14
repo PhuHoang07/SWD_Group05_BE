@@ -32,10 +32,12 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
         public async Task Delete(object id) => await GenericDAO<TEntity>.Instance.Delete(id);
 
         public async Task Update(TEntity entityToUpdate) => await GenericDAO<TEntity>.Instance.Update(entityToUpdate);
-        
+
         public async Task<int> Count(Expression<Func<TEntity, bool>> filter = null) => await GenericDAO<TEntity>.Instance.Count(filter);
 
         public async Task UpdateRange(List<TEntity> entities) => await GenericDAO<TEntity>.Instance.UpdateRange(entities);
+
+        public async Task DeleteRange(List<TEntity> entities) => await GenericDAO<TEntity>.Instance.DeleteRange(entities);
     }
 }
 
