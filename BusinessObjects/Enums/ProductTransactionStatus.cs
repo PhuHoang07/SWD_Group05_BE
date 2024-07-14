@@ -9,7 +9,6 @@ namespace BusinessObjects.Enums
     public enum ProductTransactionStatus
     {
         Pending,
-        Success,
-        Fail
+        Success
     }
 }
