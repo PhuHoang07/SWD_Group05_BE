@@ -20,10 +20,28 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateReport([FromBody] CreateReportRequestModel request)
+        public async Task<IActionResult> CreateNewReport([FromBody] CreateReportRequestModel request)
         {
-            await _reportService.CreateReport(request);
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _reportService.CreateReport(request, token);
             return Ok("Report created successfully!");
+        }
+
+        [HttpGet]
+        [Route("view-all")]
+        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize)
+        {
+            var reports = await _reportService.ViewAllReports(searchDate, pageIndex, pageSize);
+            return Ok(reports);
+        }
+
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> UpdateReport([FromBody] ReportRequestModel request)
+        {
+
+            await _reportService.UpdateReport(request);
+            return Ok("Report updated successfully!");
         }
     }
 }
