@@ -114,6 +114,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             {
                 UserInfo = new UserInfo
                 {
+                    Id = user.Id,
                     Fullname = user.Fullname,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
