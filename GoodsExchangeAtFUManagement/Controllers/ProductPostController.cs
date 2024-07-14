@@ -20,7 +20,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
+        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
         {
             var result = await _productPostService.ViewAllPostWithStatus(pageIndex, searchModel, status);
             return Ok(result);
@@ -29,7 +29,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [HttpGet]
         [Route("me")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetOwnProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string status)
+        public async Task<IActionResult> GetOwnProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
             var result = await _productPostService.ViewOwnPostWithStatus(pageIndex, searchModel, status, token);
