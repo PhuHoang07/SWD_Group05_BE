@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessObjects.DTOs.CampusDTOs
+namespace BusinessObjects.DTOs.ReportDTOs
 {
-    public class CampusResponseModel
+    public class ReportRequestModel
     {
         public string Id { get; set; } = null!;
 
-        public string Name { get; set; } = null!;
-       
-        public bool Status { get; set; }
+        public string Content { get; set; } = null!;
     }
-
 }
