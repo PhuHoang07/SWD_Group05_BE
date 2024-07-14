@@ -15,6 +15,8 @@ public partial class CoinTransaction
 
     public string UserId { get; set; } = null!;
 
+    public string Price { get; set; } = null!;
+
     public virtual CoinPack CoinPack { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

@@ -14,13 +14,15 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
 
         public string Description { get; set; } = null!;
 
+        public string Status { get; set; } = null!;
+
         public string Price { get; set; } = null!;
 
         public DateTime CreatedDate { get; set; }
 
         public DateTime? ExpiredDate { get; set; }
 
-        public string CreatedBy { get; set; } = null!;
+        public PostAuthor CreatedBy { get; set; } = null!;
 
         public string Category { get; set; } = null!;
 
@@ -42,5 +44,12 @@ namespace BusinessObjects.DTOs.ProductPostDTOs
         public bool? orderPriceDescending { get; set; }
 
         public bool? orderDateDescending { get; set; }
+    }
+
+    public class PostAuthor
+    {
+        public string FullName { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
     }
 }

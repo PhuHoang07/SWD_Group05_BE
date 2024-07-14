@@ -8,6 +8,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinTransactionServices
 {
     public interface ICoinTransactionService
     {
-        Task CreateCoinTransaction(string coinPackId, string token);
+        Task<string> CreateCoinTransaction(string coinPackId, string token);
     }
 }

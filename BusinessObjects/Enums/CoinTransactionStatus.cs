@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.Enums
 {
-    public enum ProductPostStatus
+    public enum CoinTransactionStatus
     {
-        Waiting,
-        Open,
-        Cancel,
         Pending,
-        Closed, 
-        Expired,
-        Unpaid
+        Success
     }
 }

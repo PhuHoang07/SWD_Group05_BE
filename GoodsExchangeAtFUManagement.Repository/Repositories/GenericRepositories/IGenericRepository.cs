@@ -35,5 +35,7 @@ namespace GoodsExchangeAtFUManagement.Repository.Repositories.GenericRepositorie
         Task<int> Count(Expression<Func<TEntity, bool>> filter = null);
 
         Task UpdateRange(List<TEntity> entities);
+
+        Task DeleteRange(List<TEntity> entities);
     }
 }

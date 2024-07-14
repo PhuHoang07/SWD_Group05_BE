@@ -2,6 +2,7 @@
 using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.DTOs.CategoryDTOs;
 using BusinessObjects.DTOs.CoinPackDTOs;
+using BusinessObjects.DTOs.PaymentDTOs;
 using BusinessObjects.DTOs.PostModeDTOs;
 using BusinessObjects.DTOs.ProductPostDTOs;
 using BusinessObjects.DTOs.ReportDTOs;
@@ -23,8 +24,8 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //User
             CreateMap<UserRegisterRequestModel, User>();
             CreateMap<UserRegisterRequestTestingModel, User>();
-            CreateMap<UpdateUserRequestModel, User>(); 
-            CreateMap<User, ViewUserResponseModel>();  
+            CreateMap<UpdateUserRequestModel, User>();
+            CreateMap<User, ViewUserResponseModel>();
 
             //Campus
             CreateMap<CampusRequestModel, Campus>();
@@ -37,10 +38,12 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //CoinPack
             CreateMap<CoinPackCreateRequestModel, CoinPack>();
             CreateMap<CoinPackUpdateRequestModel, CoinPack>();
-            CreateMap<CoinPack, CoinPackResponseModel > ();
+            CreateMap<CoinPack, CoinPackResponseModel>();
             CreateMap<CoinPack, CoinPackManageResponseModel>();
             //ProductPost
             CreateMap<ProductPostCreateRequestModel, ProductPost>();
+            CreateMap<ProductPostUpdateRequestModel, ProductPost>();
+            CreateMap<Payment, PaymentResponseModel>();
             //PostMode
             CreateMap<PostModeCreateRequestModel, PostMode>();
             CreateMap<PostModeUpdateRequestModel, PostMode>();
