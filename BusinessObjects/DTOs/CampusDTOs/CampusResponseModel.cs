@@ -11,5 +11,8 @@ namespace BusinessObjects.DTOs.CampusDTOs
         public string Id { get; set; } = null!;
 
         public string Name { get; set; } = null!;
+       
+        public bool Status { get; set; }
     }
+
 }

@@ -143,7 +143,13 @@ namespace GoodsExchangeAtFUManagement.DAO
 
         public async Task UpdateRange(List<TEntity> entities)
         {
-            context.UpdateRange(entities);
+            dbSet.UpdateRange(entities);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRange(List<TEntity> entities)
+        {
+            dbSet.RemoveRange(entities);
             await context.SaveChangesAsync();
         }
     }

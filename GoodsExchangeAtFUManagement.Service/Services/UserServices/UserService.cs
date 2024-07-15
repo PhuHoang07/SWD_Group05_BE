@@ -6,6 +6,8 @@ using GoodsExchangeAtFUManagement.Service.Ultis;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
+using BusinessObjects.DTOs.UserDTOs;
+using System.Linq.Expressions;
 
 namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 {
@@ -78,6 +80,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         {
             var user = await _userRepository.GetSingle(u => u.Email.Equals(request.Email));
 
+            if (user == null)
+            {
+                throw new CustomException("There is no account using this email!");
+            }
+
             var oldRefreshToken = await _refreshTokenRepository.GetSingle(r => r.UserId == user.Id && r.ExpiredDate > DateTime.Now);
             string token;
             if (oldRefreshToken == null)
@@ -97,10 +104,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                 token = oldRefreshToken.Token;
             }
 
-            if (user == null)
-            {
-                throw new CustomException("There is no account using this email!");
-            }
 
             if (!PasswordHasher.VerifyPassword(request.Password, user.Salt, user.Password))
             {
@@ -111,6 +114,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             {
                 UserInfo = new UserInfo
                 {
+                    Id = user.Id,
                     Fullname = user.Fullname,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
@@ -170,6 +174,63 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             user.Password = hash;
             user.Salt = salt;
 
+            await _userRepository.Update(user);
+        }
+
+        public async Task<List<ViewUserResponseModel>> GetAllUser(string searchQuery, int pageIndex, int pageSize)
+        {
+            Expression<Func<User, bool>> searchFilter = u => string.IsNullOrEmpty(searchQuery) ||
+                                                               u.Email.Contains(searchQuery) ||
+                                                               u.PhoneNumber.Contains(searchQuery) ||
+                                                               u.Role.Contains(searchQuery) ||
+                                                               u.Status.Contains(searchQuery);
+
+            var users = await _userRepository.Get(searchFilter,pageIndex: pageIndex, pageSize: pageSize);
+            var userResponses = _mapper.Map<List<ViewUserResponseModel>>(users);
+            return userResponses;
+        }
+
+        public async Task<ViewUserResponseModel> GetUserById(string id)
+        {
+           var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
+            {
+                throw new CustomException("User not found");
+            }
+            var userResponses = _mapper.Map<ViewUserResponseModel>(user);
+            return userResponses;
+        }
+
+        public async Task DeleteUser(string id)
+        {
+            User deleteUser = await _userRepository.GetSingle(c => c.Id.Equals(id));
+            if (deleteUser == null)
+            {
+                throw new CustomException("User not found");
+            }
+            if (deleteUser.Status == AccountStatusEnums.Inactive.ToString())
+            {
+                throw new CustomException("User is already be removed");
+            }
+            deleteUser.Status = AccountStatusEnums.Inactive.ToString();
+            await _userRepository.Update(deleteUser);
+        }
+
+        public async Task UpdateUser(UpdateUserRequestModel request, string id)
+        {          
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
+            {
+                throw new CustomException("User not found");
+            }
+            if (!string.IsNullOrEmpty(request.Fullname))
+            {
+                user.Fullname = request.Fullname;
+            }
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
             await _userRepository.Update(user);
         }
     }

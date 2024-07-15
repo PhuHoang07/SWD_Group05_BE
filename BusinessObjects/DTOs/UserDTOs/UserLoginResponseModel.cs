@@ -15,6 +15,7 @@ namespace GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs
 
     public class UserInfo
     {
+        public string Id { get; set; } = null!;
         public string Fullname { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Role { get; set; } = null!;

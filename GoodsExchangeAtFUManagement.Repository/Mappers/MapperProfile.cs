@@ -2,8 +2,11 @@
 using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.DTOs.CategoryDTOs;
 using BusinessObjects.DTOs.CoinPackDTOs;
+using BusinessObjects.DTOs.PaymentDTOs;
 using BusinessObjects.DTOs.PostModeDTOs;
 using BusinessObjects.DTOs.ProductPostDTOs;
+using BusinessObjects.DTOs.ReportDTOs;
+using BusinessObjects.DTOs.UserDTOs;
 using BusinessObjects.Models;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using System;
@@ -21,6 +24,9 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //User
             CreateMap<UserRegisterRequestModel, User>();
             CreateMap<UserRegisterRequestTestingModel, User>();
+            CreateMap<UpdateUserRequestModel, User>();
+            CreateMap<User, ViewUserResponseModel>();
+
             //Campus
             CreateMap<CampusRequestModel, Campus>();
             CreateMap<CampusCreateRequestModel, Campus>();
@@ -32,15 +38,25 @@ namespace GoodsExchangeAtFUManagement.Repository.Mappers
             //CoinPack
             CreateMap<CoinPackCreateRequestModel, CoinPack>();
             CreateMap<CoinPackUpdateRequestModel, CoinPack>();
-            CreateMap<CoinPack, CoinPackResponseModel > ();
+            CreateMap<CoinPack, CoinPackResponseModel>();
             CreateMap<CoinPack, CoinPackManageResponseModel>();
             //ProductPost
             CreateMap<ProductPostCreateRequestModel, ProductPost>();
+            CreateMap<ProductPostUpdateRequestModel, ProductPost>();
+            CreateMap<Payment, PaymentResponseModel>();
             //PostMode
             CreateMap<PostModeCreateRequestModel, PostMode>();
             CreateMap<PostModeUpdateRequestModel, PostMode>();
             CreateMap<PostMode, PostModeResponseModel>();
-            CreateMap<PostMode, PostModeManageResponseModel>(); 
+            CreateMap<PostMode, PostModeManageResponseModel>();
+            //Report
+            CreateMap<ReportRequestModel, Report>();
+            CreateMap<CreateReportRequestModel, Report>();
+            CreateMap<Report, ReportResponseModel>()
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedByNavigation.Fullname));
+
+
+
         }
     }
 }

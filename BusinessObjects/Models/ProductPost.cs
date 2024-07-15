@@ -15,7 +15,7 @@ public partial class ProductPost
 
     public string Status { get; set; } = null!;
 
-    public DateTime ExpiredDate { get; set; }
+    public DateTime? ExpiredDate { get; set; }
 
     public string CreatedBy { get; set; } = null!;
 
@@ -24,6 +24,8 @@ public partial class ProductPost
     public string PostModeId { get; set; } = null!;
 
     public string CampusId { get; set; } = null!;
+
+    public DateTime CreatedDate { get; set; }
 
     public virtual Campus Campus { get; set; } = null!;
 

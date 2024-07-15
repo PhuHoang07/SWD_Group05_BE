@@ -14,5 +14,6 @@ namespace BusinessObjects.DTOs.CategoryDTOs
 
         [Required(ErrorMessage = "Please input catgory name")]
         public string Name { get; set; } = null!;
+       
     }
 }
