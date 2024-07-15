@@ -38,7 +38,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
             {
                 throw new CustomException("The chosen post is not existed");
             }
-            if (!chosenPost.Status.Equals(ProductPostStatus.Open.ToString()))
+            if (!chosenPost.Status.Equals(ProductPostStatus.Open.ToString()) && !chosenPost.Status.Equals(ProductPostStatus.Pending.ToString()))
             {
                 throw new CustomException("This post is not open for buying");
             }

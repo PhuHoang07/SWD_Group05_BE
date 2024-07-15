@@ -35,7 +35,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
             await _productTransactionService.CancelBuyingPost(postId);
             return Ok("Cancel successfully");
         }
-
+        
         [HttpGet]
         [Authorize(Roles = "User")]
         [Route("me")]
