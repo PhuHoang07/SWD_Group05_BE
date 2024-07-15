@@ -10,7 +10,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api/user")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,6 +22,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUser(int pageIndex, int pageSize, string searchQuery = null)
         {
             
@@ -31,6 +32,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view/{id}")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _userService.GetUserById(id);
@@ -39,15 +41,17 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel request)
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel request, string id)
         {
 
-            await _userService.UpdateUser(request);
+            await _userService.UpdateUser(request, id);
             return Ok("User updated successfully!");
         }
 
         [HttpPut]
         [Route("soft-remove")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SoftRemoveUser(string id)
         {
             await _userService.DeleteUser(id);
