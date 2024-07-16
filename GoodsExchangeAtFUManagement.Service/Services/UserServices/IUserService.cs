@@ -23,5 +23,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         Task<ViewUserResponseModel> GetUserById(string id);
         Task DeleteUser(string id);
         Task UpdateUser(UpdateUserRequestModel request, string id);
+        Task AddCoinToUserBalance(string token, string coinPackId);
     }
 }
