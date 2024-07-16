@@ -91,8 +91,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinTransactionServices
                 throw new CustomException("Please choose valid status");
             }
             coinTransact.Status = reqModel.Status;
+            coinTransact.TransactAt = DateTime.Now;
             await _coinTransactionRepository.Update(coinTransact);
             return coinTransact;
         }
+
+
     }
 }
