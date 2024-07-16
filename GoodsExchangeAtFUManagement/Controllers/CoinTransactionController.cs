@@ -2,6 +2,7 @@
 using BusinessObjects.Enums;
 using GoodsExchangeAtFUManagement.Service.Services.CoinTransactionServices;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,24 @@ namespace GoodsExchangeAtFUManagement.Controllers
         {
             _coinTransactionService = coinTransactionService;
             _userService = userService;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllCoinTransaction(int? pageIndex)
+        {
+            var response = await _coinTransactionService.ViewAllCoinTransaction(pageIndex);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetOwnCoinTransaction(int? pageIndex)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            var response = await _coinTransactionService.ViewOwnCoinTransaction(token, pageIndex);
+            return Ok(response);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using BusinessObjects.DTOs.CoinTransactionDTOs;
+﻿using BusinessObjects.DTOs;
+using BusinessObjects.DTOs.CoinTransactionDTOs;
 using BusinessObjects.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,5 +15,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.CoinTransactionServices
         Task<string> CreateCoinTransaction(string coinPackId, string token);
         Task<string> GetPaymentUrl(HttpContext context, string transactId, string redirectUrl);
         Task<CoinTransaction> UpdateCoinTransactionStatus(CoinTransactionUpdateReqModel reqModel);
+        Task<Pagination<CoinTransactionResModel>> ViewAllCoinTransaction(int? pageIndex);
+        Task<Pagination<MyCoinTransactionResModel>> ViewOwnCoinTransaction(string token, int? pageIndex);
     }
 }
