@@ -237,6 +237,34 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             await _userRepository.Update(user);
         }
 
+        public async Task UpdateUserForAdmin(AdminUpdateUserResponseModel request, string id)
+        {
+           
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
+            {
+                throw new CustomException("User not found");
+            }
+            if (!string.IsNullOrEmpty(request.Fullname))
+                {
+                    user.Fullname = request.Fullname;
+                }
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                user.Email = request.Email;
+            }
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
+            if (!string.IsNullOrEmpty(request.Role))
+            {
+                user.Role = request.Role;
+            }
+
+            await _userRepository.Update(user);
+            }
+
         public async Task AddCoinToUserBalance(string token, string coinPackId)
         {
             var userId = JwtGenerator.DecodeToken(token, "userId");
@@ -246,4 +274,4 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             await _userRepository.Update(user);
         }
     }
-}
+
