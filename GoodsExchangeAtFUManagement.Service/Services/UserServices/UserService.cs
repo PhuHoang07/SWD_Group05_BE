@@ -256,6 +256,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             if (!string.IsNullOrEmpty(request.Role))
             {
                 user.Role = request.Role;
+
             }
 
             await _userRepository.Update(user);
