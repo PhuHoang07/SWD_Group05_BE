@@ -29,7 +29,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize)
+        public async Task<IActionResult> ViewAllReports(DateTime? searchDate, int? pageIndex, int pageSize)
         {
             var reports = await _reportService.ViewAllReports(searchDate, pageIndex, pageSize);
             return Ok(reports);
@@ -39,9 +39,16 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("update")]
         public async Task<IActionResult> UpdateReport([FromBody] ReportRequestModel request)
         {
-
             await _reportService.UpdateReport(request);
             return Ok("Report updated successfully!");
+        }
+
+        [HttpPut]
+        [Route("{id}/status")]
+        public async Task<IActionResult> ChangeReportStatus(string id, string status)
+        {
+            await _reportService.ChangeReportStatus(id, status);
+            return Ok("Change status successfully");
         }
     }
 }

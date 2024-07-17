@@ -45,7 +45,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [Route("view/{id}")]
         public async Task<IActionResult> ViewCoinPackById(string id)
         {
