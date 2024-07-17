@@ -128,7 +128,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
 
             if (status.Equals(ReportStatus.Approve.ToString()))
             {
-                var post = await _productPostRepository.GetSingle(p => p.Id.Equals(id));
+                var post = await _productPostRepository.GetSingle(p => p.Id.Equals(report.ProductPostId));
                 post.Status = ProductPostStatus.Closed.ToString();
                 await _productPostRepository.Update(post);
             }
