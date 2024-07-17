@@ -1,5 +1,6 @@
 ﻿
 using BusinessObjects.DTOs.UserDTOs;
+using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api")]
     [ApiController]
-    
+
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,14 +19,14 @@ namespace GoodsExchangeAtFUManagement.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
-        }      
+        }
 
         [HttpGet]
         [Route("admin/view-all")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUser(int pageIndex, int pageSize, string searchQuery = null)
         {
-            
+
             var users = await _userService.GetAllUser(searchQuery, pageIndex, pageSize);
             return Ok(users);
         }
@@ -66,6 +67,16 @@ namespace GoodsExchangeAtFUManagement.Controllers
         {
             await _userService.DeleteUser(id);
             return Ok("User deleted successfully!");
+        }
+
+        [Authorize(Roles = "User, Admin, Moderator")]
+        [HttpPut]
+        [Route("password")]
+        public async Task<IActionResult> ChangePassword(UserChangePasswordRequestModel request)
+        {
+            string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _userService.ChangePassword(request, token);
+            return Ok();
         }
     }
 }
