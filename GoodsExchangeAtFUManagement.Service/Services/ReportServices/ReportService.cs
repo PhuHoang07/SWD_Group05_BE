@@ -3,6 +3,7 @@ using BusinessObjects.DTOs.ProductPostDTOs;
 using BusinessObjects.DTOs.ReportDTOs;
 using BusinessObjects.Enums;
 using BusinessObjects.Models;
+using GoodsExchangeAtFUManagement.Repository.Repositories.ProductPostRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ReportRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Service.Ultis;
@@ -22,12 +23,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
         private readonly IMapper _mapper;
         private readonly IReportRepository _reportRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IProductPostRepository _productPostRepository;
 
-        public ReportService(IReportRepository reportRepository, IMapper mapper, IUserRepository userRepository)
+        public ReportService(IReportRepository reportRepository, IMapper mapper, IUserRepository userRepository, IProductPostRepository productPostRepository)
         {
             _mapper = mapper;
             _reportRepository = reportRepository;
             _userRepository = userRepository;
+            _productPostRepository = productPostRepository;
         }
 
         public async Task CreateReport(CreateReportRequestModel request, string token)
@@ -53,7 +56,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             await _reportRepository.Insert(newReport);
         }
 
-
         public async Task UpdateReport(ReportRequestModel request)
         {
             var report = await _reportRepository.GetSingle(r => r.Id.Equals(request.Id));
@@ -69,7 +71,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
 
             await _reportRepository.Update(report);
         }
-
 
         public async Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, int? pageIndex, int pageSize)
         {
@@ -105,7 +106,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             return reportResponses;
         }
 
-        public async Task ChangeReportStatus(string id, string status)
+        public async Task<Report> ChangeReportStatus(string id, string status)
         {
             var report = await _reportRepository.GetSingle(r => r.Id.Equals(id));
             if (report == null)
@@ -124,7 +125,16 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             }
 
             report.Status = status;
+
+            if (status.Equals(ReportStatus.Approve.ToString()))
+            {
+                var post = await _productPostRepository.GetSingle(p => p.Id.Equals(id));
+                post.Status = ProductPostStatus.Closed.ToString();
+                await _productPostRepository.Update(post);
+            }
+
             await _reportRepository.Update(report);
+            return report;
         }
     }
 }

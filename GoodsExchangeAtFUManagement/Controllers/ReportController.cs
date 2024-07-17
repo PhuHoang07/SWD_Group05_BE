@@ -1,5 +1,6 @@
 ﻿using BusinessObjects.DTOs.CampusDTOs;
 using BusinessObjects.DTOs.ReportDTOs;
+using BusinessObjects.Enums;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using GoodsExchangeAtFUManagement.Service.Services.ReportServices;
 using Microsoft.AspNetCore.Authorization;
@@ -47,8 +48,13 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("{id}/status")]
         public async Task<IActionResult> ChangeReportStatus(string id, string status)
         {
-            await _reportService.ChangeReportStatus(id, status);
-            return Ok("Change status successfully");
+            var report = await _reportService.ChangeReportStatus(id, status);
+
+            if (report.Status.Equals(ReportStatus.Approve.ToString()))
+            {
+                return Ok("Approve report successfully. This post will be closed");
+            }
+            return Ok("The report is denied");
         }
     }
 }
