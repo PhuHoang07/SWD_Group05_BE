@@ -8,6 +8,7 @@ using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 using BusinessObjects.DTOs.UserDTOs;
 using System.Linq.Expressions;
+using GoodsExchangeAtFUManagement.Repository.Repositories.CoinPackRepositories;
 
 namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
 {
@@ -17,13 +18,15 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly ICoinPackRepository _coinPackRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper, IEmailService emailService, IRefreshTokenRepository refreshTokenRepository, ICoinPackRepository coinPackRepository)
         {
             _mapper = mapper;
             _emailService = emailService;
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _coinPackRepository = coinPackRepository;
         }
 
         public async Task Register(UserRegisterRequestTestingModel request)
@@ -185,14 +188,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                                                                u.Role.Contains(searchQuery) ||
                                                                u.Status.Contains(searchQuery);
 
-            var users = await _userRepository.Get(searchFilter,pageIndex: pageIndex, pageSize: pageSize);
+            var users = await _userRepository.Get(searchFilter, pageIndex: pageIndex, pageSize: pageSize);
             var userResponses = _mapper.Map<List<ViewUserResponseModel>>(users);
             return userResponses;
         }
 
         public async Task<ViewUserResponseModel> GetUserById(string id)
         {
-           var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
             if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
             {
                 throw new CustomException("User not found");
@@ -217,7 +220,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         }
 
         public async Task UpdateUser(UpdateUserRequestModel request, string id)
-        {          
+        {
             var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
             if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
             {
@@ -233,5 +236,35 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             }
             await _userRepository.Update(user);
         }
+
+        public async Task UpdateUserForAdmin(AdminUpdateUserResponseModel request, string id)
+        {
+
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(id));
+            if (user == null || user.Status == AccountStatusEnums.Inactive.ToString())
+            {
+                throw new CustomException("User not found");
+            }
+            if (!string.IsNullOrEmpty(request.Fullname))
+            {
+                user.Fullname = request.Fullname;
+            }
+
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                user.PhoneNumber = request.PhoneNumber;
+            }
+
+            await _userRepository.Update(user);
+        }
+
+        public async Task AddCoinToUserBalance(string token, string coinPackId)
+        {
+            var userId = JwtGenerator.DecodeToken(token, "userId");
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(userId));
+            var coinPack = await _coinPackRepository.GetSingle(c => c.Id.Equals(coinPackId));
+            user.Balance += coinPack.CoinAmount;
+            await _userRepository.Update(user);
+        }
     }
-}
+

@@ -25,6 +25,7 @@ using GoodsExchangeAtFUManagement.Service.Services.ProductPostServices;
 using GoodsExchangeAtFUManagement.Service.Services.ProductTransactionServices;
 using GoodsExchangeAtFUManagement.Service.Services.ReportServices;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
+using GoodsExchangeAtFUManagement.Service.Services.VnPayServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -77,6 +78,7 @@ builder.Services.AddScoped<IProductPostService, ProductPostService>();
 builder.Services.AddScoped<ICoinTransactionService, CoinTransactionService>();
 builder.Services.AddScoped<IProductTransactionService, ProductTransactionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 //=========================================== CORS ================================================
 

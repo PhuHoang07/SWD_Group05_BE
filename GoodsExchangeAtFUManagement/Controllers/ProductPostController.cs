@@ -95,7 +95,8 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> ApproveProductPost([FromBody] string status, string id)
         {
-            await _productPostService.ApprovePost(status, id);
+            var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
+            await _productPostService.ApprovePost(status, id, token);
             return Ok("Approve post successfully");
         }
 

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BusinessObjects.DTOs.ProductPostDTOs;
 using BusinessObjects.DTOs.ReportDTOs;
+using BusinessObjects.Enums;
 using BusinessObjects.Models;
+using GoodsExchangeAtFUManagement.Repository.Repositories.ProductPostRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ReportRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
 using GoodsExchangeAtFUManagement.Service.Ultis;
@@ -21,12 +23,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
         private readonly IMapper _mapper;
         private readonly IReportRepository _reportRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IProductPostRepository _productPostRepository;
 
-        public ReportService(IReportRepository reportRepository, IMapper mapper, IUserRepository userRepository)
+        public ReportService(IReportRepository reportRepository, IMapper mapper, IUserRepository userRepository, IProductPostRepository productPostRepository)
         {
             _mapper = mapper;
             _reportRepository = reportRepository;
             _userRepository = userRepository;
+            _productPostRepository = productPostRepository;
         }
 
         public async Task CreateReport(CreateReportRequestModel request, string token)
@@ -43,14 +47,14 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             if (currentReport != null)
             {
                 throw new CustomException("A report for this product post by this user already exists.");
-            }       
+            }
             Report newReport = _mapper.Map<Report>(request);
             newReport.Id = Guid.NewGuid().ToString();
             newReport.CreatedBy = userId;
             newReport.Date = DateTime.UtcNow;
+            newReport.Status = ReportStatus.Pending.ToString();
             await _reportRepository.Insert(newReport);
         }
-
 
         public async Task UpdateReport(ReportRequestModel request)
         {
@@ -59,7 +63,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             {
                 throw new CustomException("Report not found");
             }
- 
+
             if (!string.IsNullOrEmpty(request.Content))
             {
                 report.Content = request.Content;
@@ -68,26 +72,25 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             await _reportRepository.Update(report);
         }
 
-
-        public async Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, int pageIndex, int pageSize)
+        public async Task<List<ReportResponseModel>> ViewAllReports(DateTime? searchDate, int? pageIndex, int pageSize)
         {
 
             var reportResponses = new List<ReportResponseModel>();
             Expression<Func<Report, bool>> filter = r => true;
             if (searchDate.HasValue)
             {
-                filter = filter.And(r => r.Date.Date == searchDate.Value.Date);
-            }          
+                filter = filter.And(r => r.Date.Date == searchDate.Value.Date && r.Status.Equals(ReportStatus.Pending.ToString()));
+            }
 
             Func<IQueryable<Report>, IOrderedQueryable<Report>> orderBy = q => q.OrderByDescending(r => r.Date);
-        
-            var reports = await _reportRepository.Get(filter, orderBy, pageIndex: pageIndex, pageSize: pageSize);
+
+            var reports = await _reportRepository.Get(filter, orderBy, pageIndex: pageIndex ?? 1, pageSize: pageSize);
 
             foreach (var report in reports)
             {
                 var user = await _userRepository.GetSingle(u => u.Id == report.CreatedBy);
                 if (user == null)
-                {                  
+                {
                     throw new CustomException($"User with ID '{report.CreatedBy}' not found.");
                 }
 
@@ -103,5 +106,35 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ReportServices
             return reportResponses;
         }
 
+        public async Task<Report> ChangeReportStatus(string id, string status)
+        {
+            var report = await _reportRepository.GetSingle(r => r.Id.Equals(id));
+            if (report == null)
+            {
+                throw new CustomException("Report not found");
+            }
+
+            if (!report.Status.Equals(ReportStatus.Pending.ToString()))
+            {
+                throw new CustomException("This report is not in pending status");
+            }
+
+            if (!Enum.IsDefined(typeof(ReportStatus), status))
+            {
+                throw new CustomException("Please input valid report status");
+            }
+
+            report.Status = status;
+
+            if (status.Equals(ReportStatus.Approve.ToString()))
+            {
+                var post = await _productPostRepository.GetSingle(p => p.Id.Equals(id));
+                post.Status = ProductPostStatus.Closed.ToString();
+                await _productPostRepository.Update(post);
+            }
+
+            await _reportRepository.Update(report);
+            return report;
+        }
     }
 }

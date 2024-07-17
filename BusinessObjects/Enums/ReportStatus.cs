@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace BusinessObjects.Enums
 {
-    public enum CoinTransactionStatus
+    public enum ReportStatus
     {
         Pending,
-        Success,
-        Fail
+        Approve,
+        Deny
     }
 }
