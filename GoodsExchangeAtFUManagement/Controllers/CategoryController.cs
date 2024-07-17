@@ -35,7 +35,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [Route("view-all")]
         public async Task<IActionResult> GetAllCategory(int pageIndex, int pageSize, string searchQuery = null)
         {
-          
+
             var categoryList = await _categoryService.GetAllCategory(searchQuery, pageIndex, pageSize);
             return Ok(categoryList);
         }
@@ -50,6 +50,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPut]
         [Route("update")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(CategoryRequestModel request)
         {
             await _categoryService.UpdateCategory(request);
@@ -58,6 +59,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPut]
         [Route("soft-remove")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SoftRemovedCategory(string id)
         {
             await _categoryService.DeleteCategory(id);

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,9 +57,10 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
             await _productPostRepository.Update(chosenPost);
         }
 
-        public async Task CancelBuyingPost(string id)
+        public async Task CancelBuyingPost(string id, string token)
         {
-            var chosenTransaction = await _productTransactionRepository.GetSingle(p => p.ProductPostId.Equals(id));
+            var userId = JwtGenerator.DecodeToken(token, "userId");
+            var chosenTransaction = await _productTransactionRepository.GetSingle(p => p.ProductPostId.Equals(id) && p.BuyerId.Equals(userId));
             if (chosenTransaction != null)
             {
                 if (chosenTransaction.Status.Equals(ProductTransactionStatus.Success.ToString()))
@@ -68,7 +70,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
                 await _productTransactionRepository.Delete(chosenTransaction);
             }
             else throw new CustomException("This apply post is not existed");
-            await _productTransactionRepository.Delete(chosenTransaction);
         }
 
         public async Task<List<ProductTransactionResponseModel>> ViewOwnBuyingProductWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token)

@@ -32,7 +32,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         public async Task<IActionResult> CancelBuyProduct(string postId)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productTransactionService.CancelBuyingPost(postId);
+            await _productTransactionService.CancelBuyingPost(postId, token);
             return Ok("Cancel successfully");
         }
         
