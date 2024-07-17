@@ -255,6 +255,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                 user.PhoneNumber = request.PhoneNumber;
             }
 
+            if (!string.IsNullOrEmpty(request.Role))
+            {
+                user.Role = request.Role;
+            }
+
             await _userRepository.Update(user);
         }
 
@@ -267,4 +272,5 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             await _userRepository.Update(user);
         }
     }
+}
 
