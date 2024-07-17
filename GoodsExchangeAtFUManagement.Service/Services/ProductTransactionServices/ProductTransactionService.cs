@@ -58,7 +58,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
 
         public async Task CancelBuyingPost(string id)
         {
-            var chosenTransaction = await _productTransactionRepository.GetSingle(p => p.Id == id);
+            var chosenTransaction = await _productTransactionRepository.GetSingle(p => p.ProductPostId.Equals(id));
             if (chosenTransaction != null)
             {
                 if (chosenTransaction.Status.Equals(ProductTransactionStatus.Success.ToString()))
@@ -68,6 +68,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
                 await _productTransactionRepository.Delete(chosenTransaction);
             }
             else throw new CustomException("This apply post is not existed");
+            await _productTransactionRepository.Delete(chosenTransaction);
         }
 
         public async Task<List<ProductTransactionResponseModel>> ViewOwnBuyingProductWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token)
