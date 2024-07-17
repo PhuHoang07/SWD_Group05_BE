@@ -11,7 +11,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
     public interface IProductPostService
     {
         Task CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token);
-        Task ApprovePost(string status, string id);
+        Task ApprovePost(string status, string id, string token);
         Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status);
         Task<List<ProductPostResponseModel>> ViewOwnPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status, string token);
         Task<List<ProductPostResponseModel>> ViewOwnPostExceptMine(int? pageIndex, PostSearchModel searchModel, string token);

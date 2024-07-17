@@ -303,8 +303,10 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
             //await CreateAutoUpdateExpired(chosenPost);
         }
 
-        public async Task ApprovePost(string status, string id)
+        public async Task ApprovePost(string status, string id, string token)
         {
+            var userId = JwtGenerator.DecodeToken(token, "userId");
+            var user = await _userRepository.GetSingle(u => u.Id.Equals(userId));
             if (!status.Equals(ProductPostStatus.Cancel.ToString()) && !status.Equals(ProductPostStatus.Open.ToString()))
             {
                 throw new CustomException("Please input valid status");
@@ -325,6 +327,10 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
             if (status.Equals(ProductPostStatus.Open.ToString()))
             {
                 chosenPost.ExpiredDate = DateTime.Now.AddDays(int.Parse(postMode.Duration));
+            }
+            else
+            {
+                user.Balance += int.Parse(postMode.Price);
             }
             await _productPostRepository.Update(chosenPost);
             //if (chosenPost.ExpiredDate != null)
