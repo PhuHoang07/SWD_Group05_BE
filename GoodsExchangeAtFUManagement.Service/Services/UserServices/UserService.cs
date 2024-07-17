@@ -249,10 +249,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             {
                 user.Fullname = request.Fullname;
             }
-            if (!string.IsNullOrEmpty(request.Email))
-            {
-                user.Email = request.Email;
-            }
             if (!string.IsNullOrEmpty(request.PhoneNumber))
             {
                 user.PhoneNumber = request.PhoneNumber;
