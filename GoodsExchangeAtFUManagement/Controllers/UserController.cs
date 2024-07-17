@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GoodsExchangeAtFUManagement.Controllers
 {
-    [Route("api/user")]
+    [Route("api")]
     [ApiController]
     
     public class UserController : ControllerBase
@@ -21,7 +21,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }      
 
         [HttpGet]
-        [Route("view-all")]
+        [Route("admin/view-all")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUser(int pageIndex, int pageSize, string searchQuery = null)
         {
@@ -31,7 +31,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }
 
         [HttpGet]
-        [Route("view/{id}")]
+        [Route("user/view/{id}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -40,7 +40,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("user/update")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestModel request, string id)
         {
@@ -50,7 +50,17 @@ namespace GoodsExchangeAtFUManagement.Controllers
         }
 
         [HttpPut]
-        [Route("soft-remove")]
+        [Route("admin/update")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUserForAdmin([FromBody] AdminUpdateUserResponseModel request, string id)
+        {
+
+            await _userService.UpdateUserForAdmin(request, id);
+            return Ok("User updated successfully!");
+        }
+
+        [HttpPut]
+        [Route("admin/soft-remove")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SoftRemoveUser(string id)
         {

@@ -22,6 +22,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         Task<List<ViewUserResponseModel>> GetAllUser(string searchQuery, int pageIndex, int pageSize);
         Task<ViewUserResponseModel> GetUserById(string id);
         Task DeleteUser(string id);
+        Task UpdateUserForAdmin(AdminUpdateUserResponseModel request, string id);
         Task UpdateUser(UpdateUserRequestModel request, string id);
     }
 }
