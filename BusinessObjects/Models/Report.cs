@@ -15,6 +15,8 @@ public partial class Report
 
     public string CreatedBy { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public virtual User CreatedByNavigation { get; set; } = null!;
 
     public virtual ProductPost ProductPost { get; set; } = null!;

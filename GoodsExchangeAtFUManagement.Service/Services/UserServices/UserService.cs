@@ -249,14 +249,15 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
             {
                 user.Fullname = request.Fullname;
             }
+
             if (!string.IsNullOrEmpty(request.PhoneNumber))
             {
                 user.PhoneNumber = request.PhoneNumber;
             }
+
             if (!string.IsNullOrEmpty(request.Role))
             {
                 user.Role = request.Role;
-
             }
 
             await _userRepository.Update(user);

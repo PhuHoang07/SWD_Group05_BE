@@ -459,6 +459,9 @@ public partial class GoodsExchangeAtFuContext : DbContext
                 .HasMaxLength(36)
                 .IsUnicode(false)
                 .IsFixedLength();
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.CreatedBy)

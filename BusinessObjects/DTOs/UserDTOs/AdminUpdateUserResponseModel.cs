@@ -10,7 +10,6 @@ namespace BusinessObjects.DTOs.UserDTOs
     {
         public string Fullname { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
-        public string Role { get; set; } = null!;
 
     }
 }
