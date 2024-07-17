@@ -9,6 +9,7 @@ namespace BusinessObjects.Enums
     public enum CoinTransactionStatus
     {
         Pending,
-        Success
+        Success,
+        Fail
     }
 }

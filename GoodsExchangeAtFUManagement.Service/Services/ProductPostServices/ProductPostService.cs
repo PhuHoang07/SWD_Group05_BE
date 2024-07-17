@@ -172,6 +172,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
                 Title = a.Title,
                 Description = a.Description,
                 Price = a.Price,
+                Status = a.Status,
                 CreatedBy = new PostAuthor
                 {
                     FullName = a.CreatedByNavigation.Fullname,
@@ -202,6 +203,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
                 Title = chosenPost.Title,
                 Description = chosenPost.Description,
                 Price = chosenPost.Price,
+                Status = chosenPost.Status,
                 CreatedBy = new PostAuthor
                 {
                     FullName = chosenPost.CreatedByNavigation.Fullname,
