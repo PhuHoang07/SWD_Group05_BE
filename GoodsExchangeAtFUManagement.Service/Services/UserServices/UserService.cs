@@ -88,6 +88,11 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                 throw new CustomException("There is no account using this email!");
             }
 
+            if (user.Status.Equals(AccountStatusEnums.Inactive.ToString()))
+            {
+                throw new CustomException("This account is banned from system");
+            }
+
             var oldRefreshToken = await _refreshTokenRepository.GetSingle(r => r.UserId == user.Id && r.ExpiredDate > DateTime.Now);
             string token;
             if (oldRefreshToken == null)
@@ -255,11 +260,6 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
                 user.PhoneNumber = request.PhoneNumber;
             }
 
-            if (!string.IsNullOrEmpty(request.Role))
-            {
-                user.Role = request.Role;
-            }
-
             await _userRepository.Update(user);
         }
 
@@ -273,4 +273,3 @@ namespace GoodsExchangeAtFUManagement.Service.Services.UserServices
         }
     }
 }
-
