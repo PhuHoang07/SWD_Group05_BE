@@ -286,6 +286,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
             else
             {
                 user.Balance -= int.Parse(chosenPostMode.Price);
+                chosenPost.Status = ProductPostStatus.Open.ToString();
             }
             var newPayment = new Payment
             {
