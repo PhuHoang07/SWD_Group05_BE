@@ -48,7 +48,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
             _productTransactionRepository = productTransactionRepository;
         }
 
-        public async Task CreateWaitingProductPost(ProductPostCreateRequestModel requestModel, string token)
+        public async Task MakeProduct(ProductPostCreateRequestModel requestModel, string token)
         {
             var userId = JwtGenerator.DecodeToken(token, "userId");
             var user = await _userRepository.GetSingle(u => u.Id.Equals(userId));
@@ -93,7 +93,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductPostServices
 
         }
 
-        public async Task<List<ProductPostResponseModel>> ViewAllPostWithStatus(int? pageIndex, PostSearchModel searchModel, string status)
+        public async Task<List<ProductPostResponseModel>> GetAllProduct(int? pageIndex, PostSearchModel searchModel, string status)
         {
             return await ViewAllPostWithStatus(pageIndex, status, searchModel, null, 0);
         }

@@ -5,9 +5,10 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
 {
     public interface IProductTransactionService
     {
-        Task BuyProductPost(string postId, string token);
+        Task MakeProduct(string postId, string token);
         Task CancelBuyingPost(string id, string token);
         Task<List<ProductTransactionResponseModel>> ViewOwnBuyingProductWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token);
         Task<List<ProductTransactionInSellerViewModel>> ViewBuyerOfProductPost(string postId, int? pageIndex);
+        Task<List<ProductTransactionResponseModel>> GetAllProduct(int? pageIndex, PostSearchModel searchModel);
     }
 }

@@ -1,4 +1,6 @@
 using GoodsExchangeAtFUManagement.DAO;
+using GoodsExchangeAtFUManagement.DataService;
+using GoodsExchangeAtFUManagement.Hubs;
 using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.Mappers;
 using GoodsExchangeAtFUManagement.Repository.Repositories.CampusRepositories;
@@ -14,6 +16,7 @@ using GoodsExchangeAtFUManagement.Repository.Repositories.ProductTransactionRepo
 using GoodsExchangeAtFUManagement.Repository.Repositories.RefreshTokenRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.ReportRepositories;
 using GoodsExchangeAtFUManagement.Repository.Repositories.UserRepositories;
+using GoodsExchangeAtFUManagement.Service.Services.AuthenticationService;
 using GoodsExchangeAtFUManagement.Service.Services.CampusServices;
 using GoodsExchangeAtFUManagement.Service.Services.CategoryServices;
 using GoodsExchangeAtFUManagement.Service.Services.CoinPackServices;
@@ -34,7 +37,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -47,6 +50,7 @@ builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 //========================================== MIDDLEWARE ===========================================
 
 builder.Services.AddSingleton<GlobalExceptionMiddleware>();
+builder.Services.AddSingleton<SharedDB>();
 
 //========================================== REPOSITORY ===========================================
 
@@ -79,6 +83,7 @@ builder.Services.AddScoped<ICoinTransactionService, CoinTransactionService>();
 builder.Services.AddScoped<IProductTransactionService, ProductTransactionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 //=========================================== CORS ================================================
 
@@ -87,9 +92,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowAll",
                       policy =>
                       {
-                          policy.AllowAnyOrigin()
+                          policy.WithOrigins("http://localhost:3000")
+                          //.AllowAnyOrigin()
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                       });
 });
 
@@ -156,5 +163,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<ChatHub>("/Chat");
 app.Run();

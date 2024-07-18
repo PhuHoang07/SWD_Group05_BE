@@ -19,6 +19,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCampus([FromBody] CampusCreateRequestModel request)
         {
             await _campusService.CreateCampus(request);
@@ -27,7 +28,7 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpGet]
         [Route("view-all")]
-        public async Task<IActionResult> GetAllCampus( int pageIndex, int pageSize, string searchQuery = null)
+        public async Task<IActionResult> GetAllCampus(int pageIndex, int pageSize, string searchQuery = null)
         {
             var campuses = await _campusService.GetAllCampus(searchQuery, pageIndex, pageSize);
             return Ok(campuses);
