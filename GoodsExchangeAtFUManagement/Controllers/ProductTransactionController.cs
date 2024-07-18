@@ -19,10 +19,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [HttpPost]
         [Authorize(Roles = "User")]
         [Route("{postId}")]
-        public async Task<IActionResult> BuyProduct(string postId)
+        public async Task<IActionResult> MakeProduct(string postId)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productTransactionService.BuyProductPost(postId, token);
+            await _productTransactionService.MakeProduct(postId, token);
             return Ok("Buy successfully");
         }
 
@@ -32,10 +32,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
         public async Task<IActionResult> CancelBuyProduct(string postId)
         {
             var token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productTransactionService.CancelBuyingPost(postId);
+            await _productTransactionService.CancelBuyingPost(postId, token);
             return Ok("Cancel successfully");
         }
-        
+
         [HttpGet]
         [Authorize(Roles = "User")]
         [Route("me")]
@@ -52,6 +52,15 @@ namespace GoodsExchangeAtFUManagement.Controllers
         public async Task<IActionResult> ViewBuyerOfProductPost(string postId, int? pageIndex)
         {
             var response = await _productTransactionService.ViewBuyerOfProductPost(postId, pageIndex);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("all")]
+        public async Task<IActionResult> FetchAllProduct(int? pageIndex, [FromQuery] PostSearchModel searchModel)
+        {
+            var response = await _productTransactionService.GetAllProduct(pageIndex, searchModel);
             return Ok(response);
         }
     }

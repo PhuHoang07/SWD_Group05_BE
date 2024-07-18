@@ -38,9 +38,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         [Route("view/all")]
-        public async Task<IActionResult> ViewAllPostModes()
+        public async Task<IActionResult> FetchAll()
         {
-            var list = await _postModeService.ViewAllPostMode();
+            var list = await _postModeService.GetAllPost();
             return Ok(list);
         }
 

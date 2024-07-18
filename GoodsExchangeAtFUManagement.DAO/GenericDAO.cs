@@ -107,20 +107,10 @@ namespace GoodsExchangeAtFUManagement.DAO
             await context.SaveChangesAsync();
         }
 
-        public async Task Delete(object id)
+        public async Task Delete(TEntity entity)
         {
-            TEntity entityToDelete = await dbSet.FindAsync(id);
-            Delete(entityToDelete);
+            dbSet.Remove(entity);
             await context.SaveChangesAsync();
-        }
-
-        private void Delete(TEntity entityToDelete)
-        {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
         }
 
         public async Task Update(TEntity entityToUpdate)
