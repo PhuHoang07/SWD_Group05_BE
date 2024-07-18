@@ -31,7 +31,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
             _productImagesRepository = productImagesRepository;
         }
 
-        public async Task BuyProductPost(string postId, string token)
+        public async Task MakeProduct(string postId, string token)
         {
             var userId = JwtGenerator.DecodeToken(token, "userId");
             var chosenPost = await _productPostRepository.GetSingle(p => p.Id.Equals(postId));
@@ -70,6 +70,87 @@ namespace GoodsExchangeAtFUManagement.Service.Services.ProductTransactionService
                 await _productTransactionRepository.Delete(chosenTransaction);
             }
             else throw new CustomException("This apply post is not existed");
+        }
+
+        public async Task<List<ProductTransactionResponseModel>> GetAllProduct(int? pageIndex, PostSearchModel searchModel)
+        {
+            Func<IQueryable<ProductPost>, IOrderedQueryable<ProductPost>> orderBy;
+            orderBy = o => o.OrderBy(p => p.Price).ThenBy(p => p.CreatedDate);
+
+            var buyingPost = await _productTransactionRepository.Get();
+            var buyingPostIdList = buyingPost.Select(b => b.ProductPostId).ToList();
+            Expression<Func<ProductPost, bool>> filter;
+
+            filter = p => buyingPostIdList.Contains(p.Id);
+
+            if (searchModel != null)
+            {
+                if (searchModel.orderPriceDescending.HasValue && searchModel.orderPriceDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderByDescending(p => p.Price));
+                }
+                else if (searchModel.orderPriceDescending.HasValue && !searchModel.orderPriceDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderBy(p => p.Price));
+                }
+
+                if (searchModel.orderDateDescending.HasValue && searchModel.orderDateDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderByDescending(p => p.CreatedDate));
+                }
+                else if (searchModel.orderDateDescending.HasValue && !searchModel.orderDateDescending.Value)
+                {
+                    orderBy = orderBy.AndThen(q => q.OrderBy(p => p.CreatedDate));
+                }
+
+                if (!searchModel.Campus.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Campus.Name.ToLower().Equals(searchModel.Campus.ToLower()));
+                }
+                if (!searchModel.Title.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Title.ToLower().Contains(searchModel.Title.ToLower()));
+                }
+                if (!searchModel.Category.IsNullOrEmpty())
+                {
+                    filter = filter.And(p => p.Category.Name.ToLower().Contains(searchModel.Category.ToLower()));
+                }
+            }
+
+            var allWaitingPost = await _productPostRepository.Get(filter, orderBy, includeProperties: "Category,PostMode,Campus,CreatedByNavigation", pageIndex ?? 1, 3);
+            var waitingPostListId = allWaitingPost.Select(a => a.Id).ToList();
+            var allImages = await _productImagesRepository.Get(i => waitingPostListId.Contains(i.ProductPostId));
+
+            var responseList = allWaitingPost.Select(a =>
+            {
+                var transact = buyingPost.Where(p => p.ProductPostId.Equals(a.Id)).FirstOrDefault();
+                return new ProductTransactionResponseModel
+                {
+                    Id = transact.Id,
+                    TransactAt = transact.TransactAt,
+                    Price = transact.Price,
+                    responseModel = new ProductPostResponseModel
+                    {
+                        Id = a.Id,
+                        Title = a.Title,
+                        Description = a.Description,
+                        Price = a.Price,
+                        CreatedBy = new PostAuthor
+                        {
+                            FullName = a.CreatedByNavigation.Fullname,
+                            Email = a.CreatedByNavigation.Email,
+                            PhoneNumber = a.CreatedByNavigation.PhoneNumber
+                        },
+                        Category = a.Category.Name,
+                        Campus = a.Campus.Name,
+                        CreatedDate = a.CreatedDate,
+                        ExpiredDate = a.ExpiredDate ?? null,
+                        PostMode = a.PostMode.Type,
+                        ImageUrls = allImages.Where(ai => ai.ProductPostId.Equals(a.Id)).Select(ai => ai.Url).ToList(),
+                    }
+                };
+            }).ToList();
+            return responseList;
         }
 
         public async Task<List<ProductTransactionResponseModel>> ViewOwnBuyingProductWithStatus(int? pageIndex, string status, PostSearchModel searchModel, string token)

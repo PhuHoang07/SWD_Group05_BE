@@ -45,7 +45,7 @@ namespace GoodsExchangeAtFUManagement.Service.Services.PostModeServices
             return _mapper.Map<List<PostModeResponseModel>>(list);
         }
 
-        public async Task<List<PostModeManageResponseModel>> ViewAllPostMode()
+        public async Task<List<PostModeManageResponseModel>> GetAllPost()
         {
             var list = await _postModeRepository.Get();
             return _mapper.Map<List<PostModeManageResponseModel>>(list);

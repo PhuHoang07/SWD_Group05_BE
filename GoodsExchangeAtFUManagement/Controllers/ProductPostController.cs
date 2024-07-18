@@ -20,9 +20,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> GetAllProductPost(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
+        public async Task<IActionResult> FetchAllProduct(int? pageIndex, [FromQuery] PostSearchModel searchModel, string? status)
         {
-            var result = await _productPostService.ViewAllPostWithStatus(pageIndex, searchModel, status);
+            var result = await _productPostService.GetAllProduct(pageIndex, searchModel, status);
             return Ok(result);
         }
 
@@ -83,10 +83,10 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateProductPost(ProductPostCreateRequestModel requestModel)
+        public async Task<IActionResult> MakeProduct(ProductPostCreateRequestModel requestModel)
         {
             string token = Request.Headers["Authorization"].ToString().Split(" ")[1];
-            await _productPostService.CreateWaitingProductPost(requestModel, token);
+            await _productPostService.MakeProduct(requestModel, token);
             return Ok("Create post successfully. Please wait for moderator approving your post");
         }
 

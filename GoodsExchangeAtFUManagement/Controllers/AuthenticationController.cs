@@ -1,5 +1,6 @@
 ﻿using GoodsExchangeAtFUManagement.Middlewares;
 using GoodsExchangeAtFUManagement.Repository.DTOs.UserDTOs;
+using GoodsExchangeAtFUManagement.Service.Services.AuthenticationService;
 using GoodsExchangeAtFUManagement.Service.Services.UserServices;
 using GoodsExchangeAtFUManagement.Service.Ultis;
 using Microsoft.AspNetCore.Authorization;
@@ -9,19 +10,22 @@ namespace GoodsExchangeAtFUManagement.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthController : Controller
+    public class AuthenticationController : Controller
     {
         private readonly IUserService _userService;
-        public AuthController(IUserService userService)
+        private readonly IAuthenticationService _authenticationService;
+
+        public AuthenticationController(IUserService userService, IAuthenticationService authenticationService)
         {
             _userService = userService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(UserRegisterRequestModel request)
         {
-            await _userService.RegisterAccount(request);
+            await _authenticationService.Register(request);
             return Ok("Register successfully!");
         }
 
@@ -35,9 +39,9 @@ namespace GoodsExchangeAtFUManagement.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(UserLoginRequestModel request)
+        public async Task<IActionResult> Authenticate(UserLoginRequestModel request)
         {
-            var user = await _userService.Login(request);
+            var user = await _authenticationService.Authenticate(request);
             return Ok(user);
         }
 
